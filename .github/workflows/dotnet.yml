@@ -34,16 +34,3 @@ jobs:
         retention-days: 5
       if: ${{ always() }}
 
-
-  deploy:
-
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        dotnet-version: [ '5.0.x' ]
-
-    steps:
-    - name: Download a single artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: dotnet-results-${{ matrix.dotnet-version }}
