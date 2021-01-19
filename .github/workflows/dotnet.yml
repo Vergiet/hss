@@ -37,6 +37,11 @@ jobs:
 
   deploy:
 
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '5.0.x' ]
+
     steps:
     - name: Download a single artifact
       uses: actions/download-artifact@v2
