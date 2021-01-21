@@ -48,7 +48,7 @@ jobs:
       with:
         context: ./Ui
         file: ./Ui/dockerfile
-        push: false
+        push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/hss-ui:latest
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
