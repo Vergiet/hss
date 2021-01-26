@@ -1,0 +1,32 @@
+@page "/"
+
+<h1>Hello, gRPC!</h1>
+
+<input placeholder="Something todo" @bind="newTodo" />
+
+<button class="btn btn-primary" @onclick="@SayHello">Say Hello</button>
+
+
+
+
+
+
+
+<p>@Greeting</p>
+
+@functions {
+    private string Greeting;
+    private string newTodo = "World";
+
+    async Task SayHello()
+    {
+        var channel = new Channel("backend", ChannelCredentials.Insecure);
+        var client = new Greeter.GreeterClient(channel);
+
+        var reply = await client.SayHelloAsync(new HelloRequest { Name = newTodo });
+        Greeting = reply.Message + "!";
+
+        await channel.ShutdownAsync();
+    }
+
+}
