@@ -31,7 +31,7 @@ jobs:
       id: docker_build
       uses: docker/build-push-action@v2
       with:
-        context: ./.
+        context: ./${{ matrix.apps }}/.
         file: ./${{ matrix.apps }}/dockerfile
         push: true
         tags: ghcr.io/vergiet/${{ matrix.apps }}:latest, ghcr.io/vergiet/${{ matrix.apps }}:1.0.9
