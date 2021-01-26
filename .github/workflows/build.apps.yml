@@ -1,4 +1,4 @@
-name: grpc_on_k8s_example_-_build
+name: build
 
 on:
   push:
