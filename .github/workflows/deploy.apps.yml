@@ -1,0 +1,40 @@
+name: deploy
+
+
+on:
+  registry_package:
+    types: [published, updated]
+  workflow_run:
+    workflows: ["build"]
+    types: 
+      - completed
+
+jobs:  
+  Deploy:
+    
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        apps: ['ui', 'backend']
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: azure/aks-set-context@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: 'aks-temp'
+        resource-group: 'aks-temp'
+    - name: deploy namespace to aks
+      uses: Azure/k8s-deploy@v1.3
+      with:
+        manifests: |
+            ./kubernetes/namespace.yml
+        kubectl-version: 'latest'
+    - name: deploy container to aks
+      uses: Azure/k8s-deploy@v1.3
+      with:
+        namespace: 'hss'
+        manifests: |
+            ./kubernetes/${{ matrix.apps }}.yml
+        images: ghcr.io/vergiet/${{ matrix.apps }}:latest
+        kubectl-version: 'latest'

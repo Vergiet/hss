@@ -1,0 +1,38 @@
+name: grpc_on_k8s_example_-_build
+
+on:
+  push:
+    branches: [ '*' ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    #runs-on: ubuntu-latest
+    runs-on: Ubuntu-20.04
+    strategy:
+      matrix:
+        apps: ['stockdata', 'stockweb']
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Login to DockerHub
+      uses: docker/login-action@v1 
+      with:
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GHCR_WRITETOKEN }}
+        registry: ghcr.io
+    - name: Build and push ${{ matrix.apps }}
+      id: docker_build
+      uses: docker/build-push-action@v2
+      with:
+        context: ./.
+        file: ./src/${{ matrix.apps }}/Dockerfile
+        push: true
+        tags: ghcr.io/vergiet/${{ matrix.apps }}:latest, ghcr.io/vergiet/${{ matrix.apps }}:1.0.9
+

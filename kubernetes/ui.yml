@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui
+  namespace: hss
+spec:
+  selector:
+    matchLabels:
+      run: ui
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5 
+  template:
+    metadata:
+      labels:
+        run: ui
+    spec:
+      containers:
+      - name: ui
+        image: ghcr.io/vergiet/ui:latest
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 80
+        env:
+        - name: Backend__Address
+          value: "http://backend"
+        - name: DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT
+          value: "true"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ui
+  namespace: hss
+spec:
+  type: LoadBalancer 
+  ports:
+  - port: 80
+  selector:
+    run: ui

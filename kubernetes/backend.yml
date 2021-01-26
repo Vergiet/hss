@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: hss
+spec:
+  selector:
+    matchLabels:
+      run: backend
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: backend
+    spec:
+      containers:
+      - name: backend
+        image: ghcr.io/vergiet/backend:latest
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: hss
+spec:
+  ports:
+  - port: 80
+  selector:
+    run: backend
