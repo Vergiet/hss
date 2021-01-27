@@ -24,16 +24,9 @@ jobs:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
         cluster-name: 'aks-temp'
         resource-group: 'aks-temp'
-    - name: deploy namespace to aks
-      uses: Azure/k8s-deploy@v1.3
-      with:
-        manifests: |
-            ./kubernetes/namespace.yml
-        kubectl-version: 'latest'
     - name: deploy container to aks
       uses: Azure/k8s-deploy@v1.3
       with:
-        namespace: 'hss'
         manifests: |
             ./kubernetes/${{ matrix.apps }}.yml
         images: ghcr.io/vergiet/${{ matrix.apps }}:latest
