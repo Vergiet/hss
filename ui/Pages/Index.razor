@@ -2,14 +2,16 @@
 
 <h1>Hello, gRPC!</h1>
 
-<input placeholder="Something todo" @bind="newTodo" />
-
-<button class="btn btn-primary" @onclick="@SayHello">Say Hello</button>
-
 @foreach (var line in ReadAllSettings())
 {
     <p>@line</p>
 }
+
+<input placeholder="Something todo" @bind="newTodo" />
+
+<button class="btn btn-primary" @onclick="@SayHello">Say Hello</button>
+
+
 
 <p>@Greeting</p>
 
