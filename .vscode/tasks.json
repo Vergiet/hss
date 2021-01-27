@@ -37,6 +37,24 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "bridge-to-kubernetes.service",
+            "type": "bridge-to-kubernetes.service",
+            "service": "ui",
+            "ports": [
+                0
+            ],
+            "targetCluster": "docker-desktop",
+            "targetNamespace": "default"
+        },
+        {
+            "label": "bridge-to-kubernetes.compound",
+            "dependsOn": [
+                "bridge-to-kubernetes.service",
+                "build"
+            ],
+            "dependsOrder": "sequence"
         }
     ]
 }

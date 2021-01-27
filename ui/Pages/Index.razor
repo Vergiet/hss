@@ -6,17 +6,17 @@
 
 <button class="btn btn-primary" @onclick="@SayHello">Say Hello</button>
 
-
-
-
-
-
+@foreach (var line in ReadAllSettings())
+{
+    <p>@line</p>
+}
 
 <p>@Greeting</p>
 
 @functions {
     private string Greeting;
     private string newTodo = "World";
+
 
     async Task SayHello()
     {
@@ -28,5 +28,40 @@
 
         await channel.ShutdownAsync();
     }
+
+    static List<string> ReadAllSettings()
+    {
+
+        var configlist = new List<string>();
+
+        try
+        {
+            var appSettings = ConfigurationManager.AppSettings;
+
+            if (appSettings.Count == 0)
+            {
+                configlist.Add("AppSettings is empty.");
+            }
+            else
+            {
+                foreach (var key in appSettings.AllKeys)
+                {
+                    configlist.Add(String.Format("Key: {0} Value: {1}", key, appSettings[key]));
+                }
+            }
+        }
+        catch (ConfigurationErrorsException)
+        {
+            configlist.Add("Error reading app settings");
+        }
+
+        return configlist;
+    }
+
+
+
+}
+
+@code{
 
 }
