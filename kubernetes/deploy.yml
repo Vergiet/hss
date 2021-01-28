@@ -25,6 +25,7 @@ spec:
             memory: 100Mi
         ports:
         - containerPort: 80
+      imagePullPolicy: Always
 
 ---
 
@@ -77,6 +78,7 @@ spec:
           value: "Hello from the environment"
         - name: DEMO_FAREWELL
           value: "Such a sweet sorrow"
+      imagePullPolicy: Always
 
 ---
 
