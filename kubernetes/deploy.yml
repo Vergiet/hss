@@ -6,7 +6,11 @@ spec:
   selector:
     matchLabels:
       run: backend
-  replicas: 1
+  replicas: 4
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
   template:
     metadata:
       labels:
@@ -44,7 +48,7 @@ spec:
   selector:
     matchLabels:
       run: ui
-  replicas: 1
+  replicas: 4
   strategy:
     rollingUpdate:
       maxSurge: 1
