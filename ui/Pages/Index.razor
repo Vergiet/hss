@@ -2,14 +2,9 @@
 
 <h1>Hello, gRPC!</h1>
 
-<p>version 0.1.6</p>
+<p>version 0.1.7</p>
 
-@foreach (var line in ReadAllSettings())
-{
-    <p>@line</p>
-}
-
-<p>@backend</p>
+<p>@stringa</p>
 
 <input placeholder="Something todo" @bind="newTodo" />
 
@@ -22,15 +17,21 @@
 @functions {
     private string Greeting;
     private string newTodo = "World";
-
+    private string stringa;
     private string backend_service_host = Environment.GetEnvironmentVariable("BACKEND_SERVICE_HOST");
     private string backend_service_port = Environment.GetEnvironmentVariable("BACKEND_SERVICE_PORT");
-    private string backend = String.Format("http://{0}:{1}", backend_service_host, backend_service_port);
 
+
+    static void BuildUrl()
+    {
+        //backend = String.Format($"http://{backend_service_host}:{backend_service_port}");
+
+    }
 
     async Task SayHello()
     {
-        var channel = new Channel("backend", ChannelCredentials.Insecure);
+        stringa = String.Format("http://{0}:{1}", backend_service_host, backend_service_port);
+        var channel = new Channel(stringa, ChannelCredentials.Insecure);
         var client = new Greeter.GreeterClient(channel);
 
         var reply = await client.SayHelloAsync(new HelloRequest { Name = newTodo });
@@ -39,34 +40,6 @@
         await channel.ShutdownAsync();
     }
 
-    static List<string> ReadAllSettings()
-    {
-
-        var configlist = new List<string>();
-
-        try
-        {
-            var appSettings = ConfigurationManager.AppSettings;
-
-            if (appSettings.Count == 0)
-            {
-                configlist.Add("AppSettings is empty.");
-            }
-            else
-            {
-                foreach (var key in appSettings.AllKeys)
-                {
-                    configlist.Add(String.Format("Key: {0} Value: {1}", key, appSettings[key]));
-                }
-            }
-        }
-        catch (ConfigurationErrorsException)
-        {
-            configlist.Add("Error reading app settings");
-        }
-
-        return configlist;
-    }
 
 
 
