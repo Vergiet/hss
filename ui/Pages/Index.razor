@@ -2,7 +2,9 @@
 
 <h1>Hello, gRPC!</h1>
 
-<p>version 0.1.8</p>
+<p>version 0.1.9</p>
+
+<button class="btn btn-primary" @onclick="@BuildUrl">Get Url</button>
 
 <p>@stringa</p>
 
@@ -22,15 +24,15 @@
     private string backend_service_port = Environment.GetEnvironmentVariable("BACKEND_SERVICE_PORT");
 
 
-    static void BuildUrl()
+    async void BuildUrl()
     {
-        //backend = String.Format($"http://{backend_service_host}:{backend_service_port}");
+        stringa = String.Format("{0}:{1}", backend_service_host, backend_service_port);
 
     }
 
     async Task SayHello()
     {
-        stringa = String.Format("{0}:{1}", backend_service_host, backend_service_port);
+
         var channel = new Channel(stringa, ChannelCredentials.Insecure);
         var client = new Greeter.GreeterClient(channel);
 
