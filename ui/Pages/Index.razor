@@ -30,7 +30,7 @@
 
     async Task SayHello()
     {
-        stringa = String.Format("http://{0}:{1}", backend_service_host, backend_service_port);
+        stringa = String.Format("{0}:{1}", backend_service_host, backend_service_port);
         var channel = new Channel(stringa, ChannelCredentials.Insecure);
         var client = new Greeter.GreeterClient(channel);
 
