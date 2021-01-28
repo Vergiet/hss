@@ -25,7 +25,7 @@
 
     private string backend_service_host = Environment.GetEnvironmentVariable("BACKEND_SERVICE_HOST");
     private string backend_service_port = Environment.GetEnvironmentVariable("BACKEND_SERVICE_PORT");
-    private string backend = String.Format("http://{0}:{1}", backend_service_host, backend_service_port)
+    private string backend = String.Format("http://{0}:{1}", backend_service_host, backend_service_port);
 
 
     async Task SayHello()
