@@ -2,7 +2,7 @@
 
 <h1>Hello, gRPC!</h1>
 
-<p>version 0.1.9</p>
+<p>version 0.1.10</p>
 
 <button class="btn btn-primary" @onclick="@BuildUrl">Get Url</button>
 
@@ -24,7 +24,7 @@
     private string backend_service_port = Environment.GetEnvironmentVariable("BACKEND_SERVICE_PORT");
 
 
-    async void BuildUrl()
+    void BuildUrl()
     {
         stringa = String.Format("{0}:{1}", backend_service_host, backend_service_port);
 
