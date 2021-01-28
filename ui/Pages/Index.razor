@@ -2,7 +2,7 @@
 
 <h1>Hello, gRPC!</h1>
 
-<p>version 0.1.5</p>
+<p>version 0.1.6</p>
 
 @foreach (var line in ReadAllSettings())
 {
@@ -23,7 +23,9 @@
     private string Greeting;
     private string newTodo = "World";
 
-    private string backend = Environment.GetEnvironmentVariable("DEMO_GREETING");
+    private string backend_service_host = Environment.GetEnvironmentVariable("BACKEND_SERVICE_HOST");
+    private string backend_service_port = Environment.GetEnvironmentVariable("BACKEND_SERVICE_PORT");
+    private string backend = String.Format("http://{0}:{1}", backend_service_host, backend_service_port)
 
 
     async Task SayHello()
