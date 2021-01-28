@@ -2,7 +2,7 @@
 
 <h1>Hello, gRPC!</h1>
 
-<p>version 0.1.4</p>
+<p>version 0.1.5</p>
 
 @foreach (var line in ReadAllSettings())
 {
@@ -23,7 +23,7 @@
     private string Greeting;
     private string newTodo = "World";
 
-    private string backend = Environment.GetEnvironmentVariable("HOSTNAME");
+    private string backend = Environment.GetEnvironmentVariable("DEMO_GREETING");
 
 
     async Task SayHello()
