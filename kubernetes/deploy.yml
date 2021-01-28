@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: ghcr.io/vergiet/backend:latest
+        image: ghcr.io/vergiet/backend:0.1.9
         resources:
           limits:
             cpu: 100m
@@ -62,7 +62,7 @@ spec:
     spec:
       containers:
       - name: ui
-        image: ghcr.io/vergiet/ui:latest
+        image: ghcr.io/vergiet/ui:0.1.9
         resources:
           limits:
             cpu: 100m
