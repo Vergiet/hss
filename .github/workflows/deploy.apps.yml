@@ -13,9 +13,6 @@ jobs:
   Deploy:
     
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        apps: ['ui', 'backend']
 
     steps:
     - uses: actions/checkout@v2
@@ -28,6 +25,6 @@ jobs:
       uses: Azure/k8s-deploy@v1.3
       with:
         manifests: |
-            ./kubernetes/${{ matrix.apps }}.yml
-        images: ghcr.io/vergiet/${{ matrix.apps }}:latest
+            ./kubernetes/deploy.yml
+        images: ghcr.io/vergiet/backend:latest
         kubectl-version: 'latest'
