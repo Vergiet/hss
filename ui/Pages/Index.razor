@@ -9,6 +9,8 @@
     <p>@line</p>
 }
 
+<p>@backend</p>
+
 <input placeholder="Something todo" @bind="newTodo" />
 
 <button class="btn btn-primary" @onclick="@SayHello">Say Hello</button>
@@ -20,6 +22,8 @@
 @functions {
     private string Greeting;
     private string newTodo = "World";
+
+    private string backend = Environment.GetEnvironmentVariable("Backend:Address");
 
 
     async Task SayHello()
@@ -41,6 +45,7 @@
         try
         {
             var appSettings = ConfigurationManager.AppSettings;
+            var asd = ConfigurationManager.
 
             if (appSettings.Count == 0)
             {
