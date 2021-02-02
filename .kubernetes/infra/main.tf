@@ -13,7 +13,7 @@ terraform {
   }
 }
 
-resource "azurerm_resource_group" "aks-temp" {
-  name     = "aks-temp"
-  location = "westeurope"
+resource "azurerm_resource_group" "k8s" {
+  name     = var.resource_group_name
+  location = var.location
 }
