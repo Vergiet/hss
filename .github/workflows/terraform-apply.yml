@@ -1,0 +1,31 @@
+name: Terraform Apply
+
+on:
+  workflow_run:
+    workflows: ["Terraform Plan"]
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    env:
+      ARM_CLIENT_ID: 612a8f2e-b999-4bf0-b02f-538774914d51
+      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
+      ARM_SUBSCRIPTION_ID: 233516f9-0a43-4284-8ffc-a401b6223e82
+      ARM_TENANT_ID: 6800fb13-bbf4-4885-a72e-a936ce5796da
+      tf_actions_working_dir: ./.kubernetes/infra
+
+    defaults:
+      run:
+        working-directory: ${{ env.tf_actions_working_dir }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply
