@@ -3,6 +3,8 @@ name: Terraform Apply
 on:
   workflow_run:
     workflows: ["Terraform Plan"]
+    types:
+      - completed
 
 jobs:
   terraform:
