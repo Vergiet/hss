@@ -1,0 +1,7 @@
+image:
+  registry: ghcr.io/vergiet
+  name: forecastgenerator
+  tag: latest
+
+dns:
+  name: <your-dns-zone-name>

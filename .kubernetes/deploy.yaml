@@ -100,3 +100,34 @@ spec:
               image: ghcr.io/vergiet/forecastgenerator:0.1.10
               imagePullPolicy: Always
           restartPolicy: OnFailure
+
+---
+apiVersion: secrets-store.csi.x-k8s.io/v1alpha1
+kind: SecretProviderClass
+metadata:
+  name: aks-temp-dh-kv
+spec:
+  provider: azure
+  parameters:
+    usePodIdentity: "false" # [REQUIRED] Set to "true" if using managed identities
+    useVMManagedIdentity: "false" # [OPTIONAL] if not provided, will default to "false"
+    userAssignedIdentityID: "98832b7e-d767-471b-a8bc-3a3f4e9a4d34" # [REQUIRED]  If you're using a user-assigned identity as the VM's managed identity, specify the identity's client id. If the value is empty, it defaults to use the system-assigned identity on the VM
+
+    keyvaultName:
+      "aks-temp-dh-kv" # [REQUIRED] the name of the key vault
+      #     az keyvault show --name contosoKeyVault5
+      #     the preceding command will display the key vault metadata, which includes the subscription ID, resource group name, key vault
+    cloudName: "" # [OPTIONAL for Azure] if not provided, Azure environment will default to AzurePublicCloud
+    objects: |
+      array:
+        - |
+          objectName: secret1
+          objectType: secret
+          objectVersion: ""
+        - |
+          objectName: secret2
+          objectType: secret
+          objectVersion: ""
+    resourceGroup: "aks-temp" # [REQUIRED] the resource group name of the key vault
+    subscriptionId: "233516f9-0a43-4284-8ffc-a401b6223e82" # [REQUIRED] the subscription ID of the key vault
+    tenantId: "6800fb13-bbf4-4885-a72e-a936ce5796da" # [REQUIRED] the tenant ID of the key vault
