@@ -15,7 +15,11 @@ jobs:
       ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
       ARM_SUBSCRIPTION_ID: 233516f9-0a43-4284-8ffc-a401b6223e82
       ARM_TENANT_ID: 6800fb13-bbf4-4885-a72e-a936ce5796da
+      tf_actions_working_dir: .kubernetes\infra
 
+    defaults:
+      run:
+        working-directory: ${{ env.tf_actions_working_dir }}
     steps:
       - uses: actions/checkout@v2
 
