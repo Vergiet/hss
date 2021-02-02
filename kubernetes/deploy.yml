@@ -17,30 +17,28 @@ spec:
         run: backend
     spec:
       containers:
-      - name: backend
-        image: ghcr.io/vergiet/backend:0.1.10
-        resources:
-          limits:
-            cpu: 100m
-            memory: 100Mi
-        ports:
-        - containerPort: 80
-        imagePullPolicy: Always
+        - name: backend
+          image: ghcr.io/vergiet/backend:0.1.10
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
   name: backend
 spec:
   ports:
-  - port: 80
+    - port: 80
   selector:
     run: backend
 
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -54,41 +52,51 @@ spec:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 1
-  minReadySeconds: 5 
+  minReadySeconds: 5
   template:
     metadata:
       labels:
         run: ui
     spec:
       containers:
-      - name: ui
-        image: ghcr.io/vergiet/ui:0.1.10
-        resources:
-          limits:
-            cpu: 100m
-            memory: 100Mi
-        ports:
-        - containerPort: 80
-        env:
-        - name: Backend__Address
-          value: "http://backend"
-        - name: DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT
-          value: "true"
-        - name: DEMO_GREETING
-          value: "Hello from the environment"
-        - name: DEMO_FAREWELL
-          value: "Such a sweet sorrow"
-        imagePullPolicy: Always
+        - name: ui
+          image: ghcr.io/vergiet/ui:0.1.10
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          ports:
+            - containerPort: 80
+          env:
+            - name: DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT
+              value: "true"
+          imagePullPolicy: Always
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
   name: ui
 spec:
-  type: LoadBalancer 
+  type: LoadBalancer
   ports:
-  - port: 80
+    - port: 80
   selector:
     run: ui
+
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: forecastgenerator
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: forecastgenerator
+              image: ghcr.io/vergiet/forecastgenerator:0.1.10
+              imagePullPolicy: Always
+          restartPolicy: OnFailure
