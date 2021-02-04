@@ -41,7 +41,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
       - name: Helm tool installer
         uses: Azure/setup-helm@v1
         with:
@@ -64,9 +63,36 @@ jobs:
             --set image.repository=${{ secrets.ACR_NAME }} \
             --set dns.name=${{ secrets.DNS_NAME }}
 
-  deploy-production:
+  run-tests:
     runs-on: ubuntu-latest
     needs: deploy-staging
+
+    steps:
+      - name: Run Tests
+        run: echo 'run tests'
+
+  cleanup-staging:
+    runs-on: ubuntu-latest
+    needs: run-tests
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Helm tool installer
+        uses: Azure/setup-helm@v1
+        with:
+          version: latest #v3.3.1
+      - uses: azure/aks-set-context@v1
+        with:
+          creds: "${{ secrets.AZURE_CREDENTIALS }}"
+          cluster-name: "aks-temp"
+          resource-group: "aks-temp"
+      - name: Run Helm Delete
+        run: |
+          helm delete --namespace staging contoso-website ./.kubernetes/contoso-website
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: cleanup-staging
 
     steps:
       - uses: actions/checkout@v2
