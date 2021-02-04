@@ -88,7 +88,7 @@ jobs:
           resource-group: "aks-temp"
       - name: Run Helm Delete
         run: |
-          helm delete --namespace staging contoso-website ./.kubernetes/contoso-website
+          helm delete --namespace staging contoso-website
 
   deploy-production:
     runs-on: ubuntu-latest
