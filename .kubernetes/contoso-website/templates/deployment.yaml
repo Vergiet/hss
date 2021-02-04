@@ -93,4 +93,4 @@ spec:
                   cpu: 250m
                   memory: 256Mi
               imagePullPolicy: Always
-              restartPolicy: OnFailure
+          restartPolicy: OnFailure
