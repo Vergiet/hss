@@ -2,6 +2,10 @@ resource "random_id" "log_analytics_workspace_name_suffix" {
   byte_length = 8
 }
 
+resource "random_id" "key_vault_name_suffix" {
+  byte_length = 8
+}
+
 resource "azurerm_log_analytics_workspace" "test" {
   # The WorkSpace name has to be unique across the whole of azure, not just the current subscription/tenant.
   name                = "${var.log_analytics_workspace_name}-${random_id.log_analytics_workspace_name_suffix.dec}"
@@ -65,7 +69,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "aks-kv" {
-  name                        = "aks-temp-kv"
+  name                        = "aks-temp-kv-${random_id.key_vault_name_suffix.dec}"
   location                    = azurerm_resource_group.k8s.location
   resource_group_name         = azurerm_resource_group.k8s.name
   enabled_for_disk_encryption = true
