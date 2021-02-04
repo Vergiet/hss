@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: paulhatch/semantic-version@v3.3
         with:
           # The prefix to use to identify tags
