@@ -134,8 +134,8 @@ resource "azurerm_key_vault" "aks-kv" {
 
 resource "azurerm_key_vault_access_policy" "aks-kv-sys-id" {
   key_vault_id = azurerm_key_vault.aks-kv.id
-  tenant_id    = azurerm_kubernetes_cluster.k8s.identity.tenant_id
-  object_id    = azurerm_kubernetes_cluster.k8s.identity.principal_id
+  tenant_id    = azurerm_kubernetes_cluster.k8s.identity[0].tenant_id
+  object_id    = azurerm_kubernetes_cluster.k8s.identity[0].principal_id
 
   key_permissions = [
     "backup",
