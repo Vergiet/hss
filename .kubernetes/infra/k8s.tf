@@ -130,3 +130,56 @@ resource "azurerm_key_vault" "aks-kv" {
     ]
   }
 }
+
+
+resource "azurerm_key_vault_access_policy" "aks-kv-sys-id" {
+  key_vault_id = azurerm_key_vault.aks-kv.id
+  tenant_id    = azurerm_kubernetes_cluster.k8s.tenant_id
+  object_id    = azurerm_kubernetes_cluster.k8s.object_id
+
+  key_permissions = [
+    "backup",
+    "create",
+    "decrypt",
+    "delete",
+    "encrypt",
+    "get",
+    "import",
+    "list",
+    "purge",
+    "recover",
+    "restore",
+    "sign",
+    "unwrapKey",
+    "update",
+    "verify",
+    "wrapKey",
+  ]
+
+  secret_permissions = [
+    "backup",
+    "delete",
+    "get",
+    "list",
+    "purge",
+    "recover",
+    "restore",
+    "set",
+  ]
+
+  storage_permissions = [
+    "backup",
+    "delete",
+    "deletesas",
+    "get",
+    "getsas",
+    "list",
+    "listsas",
+    "purge",
+    "recover",
+    "regeneratekey",
+    "set",
+    "setsas",
+    "update",
+  ]
+}
