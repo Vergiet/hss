@@ -69,3 +69,28 @@ spec:
             - containerPort: 80
               name: http
           imagePullPolicy: Always
+
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: forecastgenerator
+  namespace: {{ default "staging" .Release.Namespace }}
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - image: {{ .Values.image.registry }}/{{ .Values.image.forecastgenerator.name }}:{{ default "latest" .Values.image.forecastgenerator.tag }}
+              name: backend
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 128Mi
+                limits:
+                  cpu: 250m
+                  memory: 256Mi
+              imagePullPolicy: Always
+            restartPolicy: OnFailure
