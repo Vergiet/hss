@@ -1,4 +1,6 @@
 name: build
+env:
+  version: "v0.1.0"
 
 on:
   push:
@@ -7,47 +9,9 @@ on:
     branches: [master]
 
 jobs:
-  versioning:
-    runs-on: ubuntu-20.04
-
-    steps:
-      - uses: actions/checkout@v2
-      - run: git fetch --prune --unshallow
-      - name: calculate_version
-        uses: paulhatch/semantic-version@v3.3
-        with:
-          # The prefix to use to identify tags
-          branch: "hello-world"
-          # The prefix to use to identify tags
-          tag_prefix: "v"
-          # A string which, if present in a git commit, indicates that a change represents a
-          # major (breaking) change, supports regular expressions wrapped with '/'
-          major_pattern: "(MAJOR)"
-          # Same as above except indicating a minor change, supports regular expressions wrapped with '/'
-          minor_pattern: "(MINOR)"
-          # A string to determine the format of the version output
-          format: "${major}.${minor}.${patch}"
-          # Indicate whether short tags like 'v1' should be supported. If false only full
-          # tags like 'v1.0.0' will be recognized.
-          short_tags: false
-          # If this is set to true, *every* commit will be treated as a new version.
-          bump_each_commit: false
-      - name: Create tag
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{ github.token }}
-          script: |
-            github.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: "refs/tags/${{steps.calculate_version.outputs.version}}",
-              sha: context.sha
-            })
-
   build:
     #runs-on: ubuntu-latest
     runs-on: ubuntu-20.04
-    needs: versioning
     strategy:
       matrix:
         apps: ["ui", "backend", "forecastgenerator"]
@@ -71,7 +35,7 @@ jobs:
           context: ./${{ matrix.apps }}/.
           file: ./${{ matrix.apps }}/dockerfile
           push: true
-          tags: ghcr.io/vergiet/${{ matrix.apps }}:latest, ghcr.io/vergiet/${{ matrix.apps }}:0.1.10
+          tags: ghcr.io/vergiet/${{ matrix.apps }}:latest, ghcr.io/vergiet/${{ matrix.apps }}:${{env.version}}
 
   deploy-staging:
     runs-on: ubuntu-latest
