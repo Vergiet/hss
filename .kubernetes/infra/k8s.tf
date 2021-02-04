@@ -35,15 +35,20 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     vm_size    = "Standard_B2s"
   }
 
-  service_principal {
-    client_id     = var.client_id
-    client_secret = var.client_secret
+  identity {
+    type = "SystemAssigned"
   }
 
   addon_profile {
     oms_agent {
       enabled                    = true
       log_analytics_workspace_id = azurerm_log_analytics_workspace.test.id
+    }
+    http_application_routing {
+      enabled = true
+    }
+    kube_dashboard {
+      enabled = true
     }
   }
 

@@ -1,7 +1,7 @@
 image:
   registry: ghcr.io/vergiet
-  name: forecastgenerator
+  name: ui
   tag: latest
 
 dns:
-  name: <your-dns-zone-name>
+  name: b022ab49ff784cd19c9a.westeurope.aksapp.io
