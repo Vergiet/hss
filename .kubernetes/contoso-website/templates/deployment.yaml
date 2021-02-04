@@ -7,6 +7,12 @@ spec:
   selector:
     matchLabels:
       app: ui
+  replicas: 4
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
   template:
     metadata:
       labels:
@@ -25,3 +31,41 @@ spec:
           ports:
             - containerPort: 80
               name: http
+          env:
+            - name: DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT
+              value: "true"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: {{ default "staging" .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  replicas: 4
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+        - image: {{ .Values.image.registry }}/{{ .Values.image.backend.name }}:{{ default "latest" .Values.image.backend.tag }}
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          ports:
+            - containerPort: 80
+              name: http
+          imagePullPolicy: Always
