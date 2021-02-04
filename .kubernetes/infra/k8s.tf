@@ -3,7 +3,7 @@ resource "random_id" "log_analytics_workspace_name_suffix" {
 }
 
 resource "random_id" "key_vault_name_suffix" {
-  byte_length = 8
+  byte_length = 2
 }
 
 resource "azurerm_log_analytics_workspace" "test" {
