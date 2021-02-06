@@ -5,6 +5,10 @@ env:
 on:
   push:
     branches: ["hello-world"]
+    paths:
+      - "backend/**"
+      - "ui/**"
+      - "forecastgenerator/**"
   pull_request:
     branches: [master]
 
