@@ -477,3 +477,6 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+*/.kube
+*.terraform.lock.hcl
+*prep-for-terraform.md
