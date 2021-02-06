@@ -28,8 +28,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: test file read
-        run: echo ${{ readFile('.gitignore') }}
+      - name: Read file
+        id: package
+        uses: juliangruber/read-file-action@v1.0.0
+        with:
+          path: .gitignore
+      - name: Echo package.json
+        run: echo ${{ steps.package.outputs.content }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: FRONT_DOOR_PASSWORD
+          value: ${{ steps.package.outputs.content }}
+          pa_token: ${{ secrets.GHCR_WRITETOKEN }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
