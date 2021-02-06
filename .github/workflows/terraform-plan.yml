@@ -28,40 +28,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Read file
-        id: package
-        uses: juliangruber/read-file-action@v1.0.0
-        with:
-          path: .dockerignore
-
-      - uses: gliech/create-github-secret-action@v1
-        with:
-          name: FRONT_DOOR_PASSWORD
-          value: ${{ steps.package.outputs.content }}
-          pa_token: ${{ secrets.GHCR_WRITETOKEN }}
-
-      - run: mkdir ./.kube
-        shell: bash
-
-      - run: touch ./.kube/config
-        shell: bash
-
-      - run: 'echo "$FRONT_DOOR_PASSWORD" > ./.kube/config'
-        shell: bash
-        env:
-          FRONT_DOOR_PASSWORD: ${{secrets.FRONT_DOOR_PASSWORD}}
-
-      - name: get kube config
-        run: cat ./.kube/config
-
-      - name: Read secret
-        id: secret
-        uses: juliangruber/read-file-action@v1.0.0
-        with:
-          path: ./.kube/config
-
-      - run: ${{ steps.secret.outputs.content == secrets.FRONT_DOOR_PASSWORD}}
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
 
@@ -76,6 +42,7 @@ jobs:
 
   terraform-aks-config:
     runs-on: ubuntu-latest
+    if: ${{secrets.KUBE_CONFIG != null}}
 
     env:
       ARM_CLIENT_ID: 03a04d55-d299-4aad-97f6-176d371d9c1a
@@ -89,6 +56,14 @@ jobs:
         working-directory: ${{ env.tf_working_dir }}
     steps:
       - uses: actions/checkout@v2
+
+      - run: mkdir .kubernetes/.kube
+        shell: bash
+
+      - run: 'echo "$KUBE_CONFIG" > .kubernetes/.kube/config'
+        shell: bash
+        env:
+          KUBE_CONFIG: ${{secrets.KUBE_CONFIG}}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
