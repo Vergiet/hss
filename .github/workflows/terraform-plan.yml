@@ -3,11 +3,14 @@ name: Terraform Plan
 on:
   push:
     branches: ["*"]
+    paths:
+      - ".kubernetes/aks-config/**"
+      - ".kubernetes/infra/**"
   pull_request:
     branches: [master]
 
 jobs:
-  terraform:
+  terraform-infra:
     runs-on: ubuntu-latest
 
     env:
@@ -15,11 +18,39 @@ jobs:
       ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
       ARM_SUBSCRIPTION_ID: 233516f9-0a43-4284-8ffc-a401b6223e82
       ARM_TENANT_ID: 6800fb13-bbf4-4885-a72e-a936ce5796da
-      tf_actions_working_dir: ./.kubernetes/infra
+      tf_working_dir: ./.kubernetes/infra
 
     defaults:
       run:
-        working-directory: ${{ env.tf_actions_working_dir }}
+        working-directory: ${{ env.tf_working_dir }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Format
+        run: terraform fmt -check
+
+      - name: Terraform Plan
+        run: terraform plan
+
+  terraform-aks-config:
+    runs-on: ubuntu-latest
+
+    env:
+      ARM_CLIENT_ID: 03a04d55-d299-4aad-97f6-176d371d9c1a
+      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
+      ARM_SUBSCRIPTION_ID: 233516f9-0a43-4284-8ffc-a401b6223e82
+      ARM_TENANT_ID: 6800fb13-bbf4-4885-a72e-a936ce5796da
+      tf_working_dir: ./.kubernetes/aks-config
+
+    defaults:
+      run:
+        working-directory: ${{ env.tf_infra_working_dir }}
     steps:
       - uses: actions/checkout@v2
 

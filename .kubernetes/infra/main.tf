@@ -17,3 +17,14 @@ resource "azurerm_resource_group" "k8s" {
   name     = var.resource_group_name
   location = var.location
 }
+
+
+#provider "kubernetes" {
+#  host = azurerm_kubernetes_cluster.k8s.kube_config.0.host
+
+#  username = azurerm_kubernetes_cluster.k8s.kube_config.0.username
+#  password = azurerm_kubernetes_cluster.k8s.kube_config.0.password
+#}
+
+
+
