@@ -1,7 +1,7 @@
 
 
 provider "kubernetes" {
-  config_path = "/github/home/.kube/config"
+  config_path = ".kubernetes/.kube/config"
 }
 
 provider "azurerm" {
