@@ -65,20 +65,20 @@ jobs:
 
       - run: pwd
 
-      - run: ls -la /github/
-
       - run: ls -la /
 
-      - run: ls -la /github/home
+      - run: ls -la ${{env.home}}
 
       - name: Azure CLI script
         uses: azure/CLI@v1
         with:
           azcliversion: latest
           inlineScript: |
-            az aks get-credentials --resource-group aks-temp --name aks-temp --context aks-temp -f $GITHUB_WORKSPACE/.kubernetes/.kube/config --overwrite-existing
+            az aks get-credentials --resource-group aks-temp --name aks-temp --context aks-temp -f ../.kube/config --overwrite-existing
 
-      - run: cat /github/workspace/.kubernetes/.kube/config
+      - run: ls -la ../.kube
+
+      - run: cat ../.kube/config
 
       - run: kubectl config view --kubeconfig=/github/workspace/.kubernetes/.kube/config
 
