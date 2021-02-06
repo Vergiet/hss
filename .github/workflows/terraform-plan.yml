@@ -28,6 +28,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: test file read
+        run: echo ${{ readFile('.gitignore') }}
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
 
