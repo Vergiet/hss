@@ -76,13 +76,15 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az aks get-credentials --resource-group aks-temp --name aks-temp --context aks-temp -f ../.kube/config --overwrite-existing
+            az aks get-credentials --resource-group aks-temp --name aks-temp --context aks-temp -f $GITHUB_WORKSPACE/.kubernetes/.kube/config --overwrite-existing
 
-      - run: ls -la ../.kube
+      - run: 'ls -la "$GITHUB_WORKSPACE/.kubernetes" '
 
-      - run: cat ../.kube/config
+      - run: 'ls -la "$GITHUB_WORKSPACE/.kubernetes/.kube" '
 
-      - run: kubectl config view --kubeconfig=/github/workspace/.kubernetes/.kube/config
+      - run: cat $GITHUB_WORKSPACE/.kubernetes/.kube/config
+
+      - run: kubectl config view --kubeconfig=$GITHUB_WORKSPACE/.kubernetes/.kube/config
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
