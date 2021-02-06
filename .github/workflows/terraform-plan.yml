@@ -63,6 +63,8 @@ jobs:
 
       - run: ls -la .
 
+      - run: pwd
+
       - run: ls -la /github/
 
       - run: ls -la /
