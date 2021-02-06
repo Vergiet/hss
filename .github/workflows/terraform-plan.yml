@@ -63,7 +63,9 @@ jobs:
 
       - run: ls -la .
 
-      - run: ls -la /github/workspace
+      - run: ls -la /github/
+
+      - run: ls -la /
 
       - run: ls -la /github/home
 
