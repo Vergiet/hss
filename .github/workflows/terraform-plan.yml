@@ -50,7 +50,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ${{ env.tf_infra_working_dir }}
+        working-directory: ${{ env.tf_working_dir }}
     steps:
       - uses: actions/checkout@v2
 
