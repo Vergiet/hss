@@ -40,6 +40,12 @@ jobs:
           value: ${{ steps.package.outputs.content }}
           pa_token: ${{ secrets.GHCR_WRITETOKEN }}
 
+      - name: get kube config
+        run: echo ${{secrets.FRONT_DOOR_PASSWORD}} >> ./.kube/config
+
+      - name: get kube config
+        run: cat ./.kube/config
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
 
