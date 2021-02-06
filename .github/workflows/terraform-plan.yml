@@ -54,6 +54,14 @@ jobs:
       - name: get kube config
         run: cat ./.kube/config
 
+      - name: Read secret
+        id: secret
+        uses: juliangruber/read-file-action@v1.0.0
+        with:
+          path: ./.kube/config
+
+      - run: ${{ steps.secret.outputs.content == secrets.FRONT_DOOR_PASSWORD}}
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
 
