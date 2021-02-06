@@ -9,6 +9,7 @@ on:
       - "backend/**"
       - "ui/**"
       - "forecastgenerator/**"
+      - ".github/workflows/build.apps.yml"
   pull_request:
     branches: [master]
 

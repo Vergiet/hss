@@ -26,4 +26,7 @@ output "host" {
   value = azurerm_kubernetes_cluster.k8s.kube_config.0.host
 }
 
+output "dns_name" {
+  value = azurerm_kubernetes_cluster.k8s.addon_profile.0.http_application_routing.0.http_application_routing_zone_name
+}
 
