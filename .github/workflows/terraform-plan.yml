@@ -66,11 +66,11 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az aks get-credentials --resource-group aks-temp --name aks-temp --context aks-temp -f .kubernetes/.kube/config --overwrite-existing
+            az aks get-credentials --resource-group aks-temp --name aks-temp --context aks-temp -f /github/home/.kube/config --overwrite-existing
 
-      - run: cat .kubernetes/.kube/config
+      - run: cat /github/home/.kube/config
 
-      - run: kubectl config view --kubeconfig=.kubernetes/.kube/config
+      - run: kubectl config view --kubeconfig=/github/home/.kube/config
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
