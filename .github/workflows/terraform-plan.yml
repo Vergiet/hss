@@ -40,6 +40,9 @@ jobs:
           value: ${{ steps.package.outputs.content }}
           pa_token: ${{ secrets.GHCR_WRITETOKEN }}
 
+      - run: mkdir ./.kube
+        shell: bash
+
       - run: touch ./.kube/config
         shell: bash
 
