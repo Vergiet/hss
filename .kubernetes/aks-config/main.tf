@@ -1,7 +1,7 @@
 
 
 provider "kubernetes" {
-  config_path    = "../.kube/config"
+  config_path = "../.kube/config"
 }
 
 provider "azurerm" {
@@ -25,7 +25,7 @@ data "azurerm_kubernetes_cluster" "k8s" {
 }
 
 data "azurerm_resource_group" "k8s" {
-  name     = var.resource_group_name
+  name = var.resource_group_name
 }
 
 
