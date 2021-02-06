@@ -6,6 +6,8 @@ on:
     paths:
       - ".kubernetes/aks-config/**"
       - ".kubernetes/infra/**"
+      - ".github/workflows/terraform-plan.yml"
+      - ".github/workflows/terraform-apply.yml"
   pull_request:
     branches: [master]
 
