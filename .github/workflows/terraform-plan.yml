@@ -76,7 +76,6 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            whoami
             az aks get-credentials --resource-group aks-temp --name aks-temp --context aks-temp -f $GITHUB_WORKSPACE/.kubernetes/.kube/config --overwrite-existing
 
       - run: "whoami"
