@@ -32,7 +32,7 @@ jobs:
         id: package
         uses: juliangruber/read-file-action@v1.0.0
         with:
-          path: .gitignore
+          path: .dockerignore
 
       - uses: gliech/create-github-secret-action@v1
         with:
