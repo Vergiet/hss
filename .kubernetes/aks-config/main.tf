@@ -64,6 +64,7 @@ resource "azurerm_eventhub_authorization_rule" "example" {
   manage              = false
 }
 
+
 resource "kubernetes_secret" "example" {
   metadata {
     name = "aks-eventhub-con-string"
@@ -76,7 +77,6 @@ resource "kubernetes_secret" "example" {
   type = "Opaque"
 
 }
-
 
 
 output "http_application_routing_zone_name" {

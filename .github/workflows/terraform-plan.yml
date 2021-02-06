@@ -66,7 +66,9 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az aks get-credentials --resource-group aks-temp --name aks-temp -f .kubernetes/.kube/config --overwrite-existing
+            az aks get-credentials --resource-group aks-temp --name aks-temp --context -f .kubernetes/.kube/config --overwrite-existing
+
+      - run: cat .kubernetes/.kube/config
 
       - run: kubectl config view --kubeconfig=.kubernetes/.kube/config
 
