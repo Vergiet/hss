@@ -33,8 +33,6 @@ jobs:
         uses: juliangruber/read-file-action@v1.0.0
         with:
           path: .gitignore
-      - name: Echo package.json
-        run: echo ${{ steps.package.outputs.content }}
 
       - uses: gliech/create-github-secret-action@v1
         with:
