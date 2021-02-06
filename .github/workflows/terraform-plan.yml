@@ -40,6 +40,9 @@ jobs:
           value: ${{ steps.package.outputs.content }}
           pa_token: ${{ secrets.GHCR_WRITETOKEN }}
 
+      - run: touch ./.kube/config
+        shell: bash
+
       - run: 'echo "$FRONT_DOOR_PASSWORD" > ./.kube/config'
         shell: bash
         env:
