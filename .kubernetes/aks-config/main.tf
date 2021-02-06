@@ -1,7 +1,7 @@
 
 
 provider "kubernetes" {
-  config_path = ".kubernetes/.kube/config"
+  config_path = var.context_config
 }
 
 provider "azurerm" {
