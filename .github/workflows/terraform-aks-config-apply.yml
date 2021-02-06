@@ -10,7 +10,6 @@ jobs:
   terraform-aks-config:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    needs: terraform-infra
 
     env:
       ARM_CLIENT_ID: 03a04d55-d299-4aad-97f6-176d371d9c1a
