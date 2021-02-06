@@ -10,6 +10,7 @@ on:
       - "ui/**"
       - "forecastgenerator/**"
       - ".github/workflows/build.apps.yml"
+      - ".kubernetes/contoso-website/**"
   pull_request:
     branches: [master]
 
