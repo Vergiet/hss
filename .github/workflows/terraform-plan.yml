@@ -40,8 +40,10 @@ jobs:
           value: ${{ steps.package.outputs.content }}
           pa_token: ${{ secrets.GHCR_WRITETOKEN }}
 
-      - name: get kube config
-        run: ${{secrets.FRONT_DOOR_PASSWORD}} > ./.kube/config
+      - run: 'echo "$FRONT_DOOR_PASSWORD" > ./.kube/config'
+        shell: bash
+        env:
+          FRONT_DOOR_PASSWORD: ${{secrets.FRONT_DOOR_PASSWORD}}
 
       - name: get kube config
         run: cat ./.kube/config
