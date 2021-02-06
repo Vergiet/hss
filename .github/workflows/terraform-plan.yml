@@ -67,15 +67,9 @@ jobs:
 
       - run: ls -la /
 
-      - run: 'ls -la "$ws" '
-        shell: bash
-        env:
-          ws: ${{env.GITHUB_WORKSPACE}}
+      - run: 'ls -la "$GITHUB_WORKSPACE" '
 
-      - run: 'ls -la "$home" '
-        shell: bash
-        env:
-          home: ${{env.HOME}}
+      - run: 'ls -la "$HOME" '
 
       - name: Azure CLI script
         uses: azure/CLI@v1
