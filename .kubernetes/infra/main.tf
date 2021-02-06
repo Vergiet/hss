@@ -26,5 +26,7 @@ resource "azurerm_resource_group" "k8s" {
 #  password = azurerm_kubernetes_cluster.k8s.kube_config.0.password
 #}
 
-
+provider "github" {
+  token = "${var.github_token}"
+}
 
