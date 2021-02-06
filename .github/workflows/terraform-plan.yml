@@ -82,6 +82,8 @@ jobs:
 
       - run: 'ls -la "$GITHUB_WORKSPACE/.kubernetes/.kube" '
 
+      - run: chmod +r $GITHUB_WORKSPACE/.kubernetes/.kube/config
+
       - run: cat $GITHUB_WORKSPACE/.kubernetes/.kube/config
 
       - run: kubectl config view --kubeconfig=$GITHUB_WORKSPACE/.kubernetes/.kube/config
