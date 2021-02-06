@@ -27,6 +27,6 @@ resource "azurerm_resource_group" "k8s" {
 #}
 
 provider "github" {
-  token = "${var.github_token}"
+  token = var.github_token
 }
 
