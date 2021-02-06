@@ -36,4 +36,6 @@ variable "log_analytics_workspace_sku" {
   default = "PerGB2018"
 }
 
-variable "context_config" {}
+variable "context_config" {
+  default = "../.kube/config"
+}
