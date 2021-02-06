@@ -68,6 +68,8 @@ jobs:
           inlineScript: |
             az aks get-credentials --resource-group aks-temp --name aks-temp -f .kubernetes/.kube/config --overwrite-existing
 
+      - run: kubectl config view --kubeconfig=.kubernetes/.kube/config
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
 
