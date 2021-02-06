@@ -42,7 +42,7 @@ jobs:
 
   terraform-aks-config:
     runs-on: ubuntu-latest
-    if: ${{secrets.KUBE_CONFIG != null}}
+    if: ${{ secrets.KUBE_CONFIG != null }}
 
     env:
       ARM_CLIENT_ID: 03a04d55-d299-4aad-97f6-176d371d9c1a
@@ -57,13 +57,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - run: mkdir .kubernetes/.kube
-        shell: bash
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - run: 'echo "$KUBE_CONFIG" > .kubernetes/.kube/config'
-        shell: bash
-        env:
-          KUBE_CONFIG: ${{secrets.KUBE_CONFIG}}
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az aks get-credentials --resource-group aks-temp --name aks-temp -f .kubernetes/.kube/config --overwrite-existing
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
