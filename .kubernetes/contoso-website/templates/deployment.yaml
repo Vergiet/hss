@@ -84,10 +84,17 @@ spec:
           containers:
             - image: {{ .Values.image.registry }}/{{ .Values.image.forecastgenerator.name }}:{{ default "latest" .Values.image.forecastgenerator.tag }}
               name: forecastgenerator
-              envFrom:
-              - secretRef:
-                  name: aks-eventhub-con-string
-                  name: aks-eventhub-name
+              env:
+                - name: connectionstring
+                  valueFrom:
+                    secretKeyRef:
+                      name: aks-eventhub-con-string
+                      key: connectionstring
+                - name: eventhub-name
+                  valueFrom:
+                    secretKeyRef:
+                      name: aks-eventhub-name
+                      key: name
               resources:
                 requests:
                   cpu: 100m
