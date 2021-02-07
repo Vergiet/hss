@@ -9,6 +9,3 @@ image:
   forecastgenerator:
     name: forecastgenerator
     tag: 0.1.1
-
-dns:
-  name: b022ab49ff784cd19c9a.westeurope.aksapp.io
