@@ -2,13 +2,13 @@ image:
   registry: ghcr.io/vergiet
   ui:
     name: ui
-    tag: latest
+    tag: 0.1.1
   backend:
     name: backend
-    tag: latest
+    tag: 0.1.1
   forecastgenerator:
     name: forecastgenerator
-    tag: latest
+    tag: 0.1.1
 
 dns:
   name: b022ab49ff784cd19c9a.westeurope.aksapp.io
