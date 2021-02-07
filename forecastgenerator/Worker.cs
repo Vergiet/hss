@@ -28,8 +28,8 @@ namespace ForecastGenerator
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var connectionString = Environment.GetEnvironmentVariable("SECRET_USERNAME");
-            var eventHubName = "acceptancetesteventhub-54027";
+            var connectionString = Environment.GetEnvironmentVariable("connectionstring");
+            var eventHubName = Environment.GetEnvironmentVariable("eventhub-name");
 
             if (null == connectionString)
             {
