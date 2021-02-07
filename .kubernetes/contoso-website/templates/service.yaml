@@ -5,10 +5,7 @@ metadata:
   namespace: {{ default "staging" .Release.Namespace }}
 spec:
   ports:
-    - port: 80
-      protocol: TCP
-      targetPort: http
-      name: http
+  - port: 80
   selector:
     app: ui
   type: ClusterIP
