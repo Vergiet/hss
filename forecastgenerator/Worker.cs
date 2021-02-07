@@ -28,8 +28,8 @@ namespace ForecastGenerator
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var connectionString = "Endpoint=sb://aks-event-hub.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=W0ip33R6uMIw2NjTUGkxHgjKYWR1FmZPkk8xCSB4f1g=";
-            var eventHubName = "eventhub01";
+            var connectionString = Environment.GetEnvironmentVariable("SECRET_USERNAME"); ;
+            var eventHubName = "acceptancetesteventhub-54027";
 
             await using (var producer = new EventHubProducerClient(connectionString, eventHubName))
             {
