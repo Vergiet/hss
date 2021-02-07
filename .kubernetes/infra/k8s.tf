@@ -32,9 +32,9 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   dns_prefix          = var.dns_prefix
 
   default_node_pool {
-    name       = "agentpool"
-    node_count = var.agent_count
-    vm_size    = "Standard_B2s"
+    name                = "agentpool"
+    node_count          = var.agent_count
+    vm_size             = "Standard_B2s"
     enable_auto_scaling = true
   }
 
