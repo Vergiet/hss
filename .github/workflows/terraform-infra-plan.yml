@@ -11,7 +11,7 @@ on:
     branches: [master]
 
 jobs:
-  terraform-infra:
+  infra-plan:
     runs-on: ubuntu-latest
 
     env:
@@ -38,3 +38,114 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan -var="github_token=${{secrets.GHCR_WRITETOKEN}}"
+
+  infra-apply:
+    runs-on: ubuntu-latest
+    needs: infra-plan
+
+    env:
+      ARM_CLIENT_ID: 03a04d55-d299-4aad-97f6-176d371d9c1a
+      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
+      ARM_SUBSCRIPTION_ID: 233516f9-0a43-4284-8ffc-a401b6223e82
+      ARM_TENANT_ID: 6800fb13-bbf4-4885-a72e-a936ce5796da
+      tf_working_dir: ./.kubernetes/infra
+
+    defaults:
+      run:
+        working-directory: ${{ env.tf_working_dir }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -var="github_token=${{secrets.GHCR_WRITETOKEN}}"
+
+  aks-config-plan:
+    runs-on: ubuntu-latest
+    needs: infra-apply
+
+    env:
+      ARM_CLIENT_ID: 03a04d55-d299-4aad-97f6-176d371d9c1a
+      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
+      ARM_SUBSCRIPTION_ID: 233516f9-0a43-4284-8ffc-a401b6223e82
+      ARM_TENANT_ID: 6800fb13-bbf4-4885-a72e-a936ce5796da
+      tf_working_dir: ./.kubernetes/aks-config
+
+    defaults:
+      run:
+        working-directory: ${{ env.tf_working_dir }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az aks get-credentials --resource-group aks-temp --name aks-temp --context aks-temp -f $GITHUB_WORKSPACE/.kubernetes/.kube/config --overwrite-existing
+
+      - run: sudo chmod +r $GITHUB_WORKSPACE/.kubernetes/.kube/config
+
+      - run: kubectl config view --kubeconfig=$GITHUB_WORKSPACE/.kubernetes/.kube/config
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Format
+        run: terraform fmt -check
+
+      - name: Terraform Plan
+        run: terraform plan -var="context_config=$GITHUB_WORKSPACE/.kubernetes/.kube/config"
+
+  aks-config-apply:
+    runs-on: ubuntu-latest
+    needs: aks-config-plan
+
+    env:
+      ARM_CLIENT_ID: 03a04d55-d299-4aad-97f6-176d371d9c1a
+      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
+      ARM_SUBSCRIPTION_ID: 233516f9-0a43-4284-8ffc-a401b6223e82
+      ARM_TENANT_ID: 6800fb13-bbf4-4885-a72e-a936ce5796da
+      tf_working_dir: ./.kubernetes/aks-config
+
+    defaults:
+      run:
+        working-directory: ${{ env.tf_working_dir }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az aks get-credentials --resource-group aks-temp --name aks-temp --context aks-temp -f $GITHUB_WORKSPACE/.kubernetes/.kube/config --overwrite-existing
+
+      - run: sudo chmod +r $GITHUB_WORKSPACE/.kubernetes/.kube/config
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -var="context_config=$GITHUB_WORKSPACE/.kubernetes/.kube/config"
