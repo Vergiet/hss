@@ -87,6 +87,7 @@ spec:
               envFrom:
               - secretRef:
                   name: aks-eventhub-con-string
+                  name: aks-eventhub-name
               resources:
                 requests:
                   cpu: 100m

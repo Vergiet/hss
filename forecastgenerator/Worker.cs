@@ -28,38 +28,52 @@ namespace ForecastGenerator
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var connectionString = Environment.GetEnvironmentVariable("SECRET_USERNAME"); ;
+            var connectionString = Environment.GetEnvironmentVariable("SECRET_USERNAME");
             var eventHubName = "acceptancetesteventhub-54027";
 
-            await using (var producer = new EventHubProducerClient(connectionString, eventHubName))
+            if (null == connectionString)
+            {
+                _hostApplicationLifetime.StopApplication();
+            }
+
+            try
+            {
+                await using (var producer = new EventHubProducerClient(connectionString, eventHubName))
+                {
+
+                    var ForecastService = new WeatherForecastService();
+                    var forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+
+
+                    using EventDataBatch eventBatch = await producer.CreateBatchAsync();
+
+                    foreach (var forecast in forecasts)
+                    {
+                        /*
+                        Message msg = new Message
+                        {
+                            date = DateTime.Now,
+                            text = Guid.NewGuid().ToString(),
+                        };
+                        */
+                        var message = JsonSerializer.Serialize(forecast);
+                        // var message = string.Format("{0} > Sending message: {1}", DateTime.Now, Guid.NewGuid().ToString());
+                        eventBatch.TryAdd(new EventData(Encoding.ASCII.GetBytes(message)));
+                        _logger.LogInformation(message);
+                    };
+
+                    await producer.SendAsync(eventBatch);
+                    //Thread.Sleep(200);
+                    await Task.Delay(200, stoppingToken);
+
+                };
+            }
+            catch
             {
 
-                var ForecastService = new WeatherForecastService();
-                var forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
-
-
-                using EventDataBatch eventBatch = await producer.CreateBatchAsync();
-
-                foreach (var forecast in forecasts)
-                {
-                    /*
-                    Message msg = new Message
-                    {
-                        date = DateTime.Now,
-                        text = Guid.NewGuid().ToString(),
-                    };
-                    */
-                    var message = JsonSerializer.Serialize(forecast);
-                    // var message = string.Format("{0} > Sending message: {1}", DateTime.Now, Guid.NewGuid().ToString());
-                    eventBatch.TryAdd(new EventData(Encoding.ASCII.GetBytes(message)));
-                    _logger.LogInformation(message);
-                };
-
-                await producer.SendAsync(eventBatch);
-                //Thread.Sleep(200);
-                await Task.Delay(200, stoppingToken);
-
             };
+
+
 
             _hostApplicationLifetime.StopApplication();
 
