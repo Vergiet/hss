@@ -68,6 +68,7 @@ resource "azurerm_eventhub_authorization_rule" "example" {
 resource "kubernetes_secret" "aks-eventhub-con-string" {
   metadata {
     name = "aks-eventhub-con-string"
+    namespace = var.namespace
   }
 
   data = {
@@ -82,6 +83,7 @@ resource "kubernetes_secret" "aks-eventhub-con-string" {
 resource "kubernetes_secret" "aks-eventhub-name" {
   metadata {
     name = "aks-eventhub-name"
+    namespace = var.namespace
   }
 
   data = {

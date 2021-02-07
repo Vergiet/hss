@@ -39,3 +39,7 @@ variable "log_analytics_workspace_sku" {
 variable "context_config" {
   default = "../.kube/config"
 }
+
+variable "namespace" {
+  default = "staging"
+}
