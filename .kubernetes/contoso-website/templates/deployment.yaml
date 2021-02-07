@@ -92,10 +92,4 @@ spec:
                   cpu: 250m
                   memory: 256Mi
               imagePullPolicy: Always
-              env:
-              - name: SECRET_USERNAME
-                valueFrom:
-                  secretKeyRef:
-                    name: aks-eventhub-con-string
-                    key: connectionstring
           restartPolicy: OnFailure
