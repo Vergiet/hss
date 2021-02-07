@@ -35,6 +35,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     name                = "agentpool"
     node_count          = var.agent_count
     max_count           = 10
+    min_count           = 3
     vm_size             = "Standard_B2s"
     enable_auto_scaling = true
   }
