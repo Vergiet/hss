@@ -35,6 +35,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     name       = "agentpool"
     node_count = var.agent_count
     vm_size    = "Standard_B2s"
+    enable_auto_scaling = true
   }
 
   identity {
@@ -69,8 +70,3 @@ resource "local_file" "kubeconfig" {
   filename = "../.kube/config"
 }
 
-resource "github_actions_secret" "example_secret" {
-  repository      = "hss"
-  secret_name     = "DNS_NAME"
-  plaintext_value = azurerm_kubernetes_cluster.k8s.addon_profile.0.http_application_routing.0.http_application_routing_zone_name
-}

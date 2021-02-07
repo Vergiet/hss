@@ -36,4 +36,3 @@ variable "log_analytics_workspace_sku" {
   default = "PerGB2018"
 }
 
-variable "github_token" {}
