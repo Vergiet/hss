@@ -1,14 +1,13 @@
 name: Infra Deployment
 
 on:
+  workflow_dispatch:
   push:
     branches: ["*"]
     paths:
       - ".kubernetes/aks-config/**"
       - ".kubernetes/infra/**"
       - ".github/workflows/terraform-*.yml"
-  pull_request:
-    branches: [master]
 
 jobs:
   infra-plan:
