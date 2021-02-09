@@ -54,6 +54,14 @@ resource "azurerm_eventhub" "example" {
   message_retention   = 1
 }
 
+resource "azurerm_eventhub" "example-output" {
+  name                = "acceptanceTestEventHub-${random_id.event_hub_name_suffix.dec}-output"
+  namespace_name      = azurerm_eventhub_namespace.example.name
+  resource_group_name = data.azurerm_resource_group.k8s.name
+  partition_count     = 2
+  message_retention   = 1
+}
+
 resource "azurerm_eventhub_authorization_rule" "example" {
   name                = "navi"
   namespace_name      = azurerm_eventhub_namespace.example.name
@@ -98,4 +106,46 @@ resource "kubernetes_secret" "aks-eventhub-name" {
 
 output "http_application_routing_zone_name" {
   value = data.azurerm_kubernetes_cluster.k8s.addon_profile[0].http_application_routing[0].http_application_routing_zone_name
+}
+
+
+
+resource "azurerm_stream_analytics_job" "example" {
+  name                                     = "example-job"
+  resource_group_name                      = azurerm_resource_group.k8s.name
+  location                                 = azurerm_resource_group.k8s.location
+  compatibility_level                      = "1.1"
+  data_locale                              = "en-GB"
+  events_late_arrival_max_delay_in_seconds = 60
+  events_out_of_order_max_delay_in_seconds = 50
+  events_out_of_order_policy               = "Adjust"
+  output_error_policy                      = "Drop"
+  streaming_units                          = 1
+
+  tags = {
+    environment = "Development"
+  }
+
+  transformation_query = <<QUERY
+    SELECT *
+    INTO [YourOutputAlias]
+    FROM [YourInputAlias]
+QUERY
+
+}
+
+
+
+resource "azurerm_stream_analytics_output_eventhub" "example" {
+  name                      = "output-to-eventhub"
+  stream_analytics_job_name = azurerm_stream_analytics_job.example.name
+  resource_group_name       = azurerm_stream_analytics_job.example.resource_group_name
+  eventhub_name             = azurerm_eventhub.example.name
+  servicebus_namespace      = azurerm_eventhub_namespace.example.name
+  shared_access_policy_key  = azurerm_eventhub_namespace.example.default_primary_key
+  shared_access_policy_name = "RootManageSharedAccessKey"
+
+  serialization {
+    type = "json"
+  }
 }
