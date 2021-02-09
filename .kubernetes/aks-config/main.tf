@@ -127,9 +127,10 @@ resource "azurerm_stream_analytics_job" "example" {
   }
 
   transformation_query = <<QUERY
-    SELECT *
-    INTO [YourOutputAlias]
-    FROM [YourInputAlias]
+    SELECT Day, AVG(TemperatureC),MIN(TemperatureC),MAX(TemperatureC),STDEVP(TemperatureC)
+    INTO [output-to-eventhub]
+    FROM [eventhub-stream-input]
+    GROUP BY Day, TumblingWindow(minute,5)  
 QUERY
 
 }
