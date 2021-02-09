@@ -147,5 +147,7 @@ resource "azurerm_stream_analytics_output_eventhub" "example" {
 
   serialization {
     type = "Json"
+    encoding = "UTF8"
+    format = "Array"
   }
 }
