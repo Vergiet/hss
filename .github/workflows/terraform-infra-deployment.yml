@@ -7,7 +7,7 @@ on:
     paths:
       - ".kubernetes/aks-config/**"
       - ".kubernetes/infra/**"
-      - ".github/workflows/terraform-*.yml"
+      - ".github/workflows/terraform-infra-deployment.yml"
 
 jobs:
   infra-plan:
