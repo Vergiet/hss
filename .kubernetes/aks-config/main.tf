@@ -146,8 +146,8 @@ resource "azurerm_stream_analytics_output_eventhub" "example" {
   shared_access_policy_name = "RootManageSharedAccessKey"
 
   serialization {
-    type = "Json"
+    type     = "Json"
     encoding = "UTF8"
-    format = "Array"
+    format   = "Array"
   }
 }
