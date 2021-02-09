@@ -1,24 +1,97 @@
 name: deploy
 
 on:
-  registry_package:
-    types: [published, updated]
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["build"]
+    types:
+      - completed
+  push:
+    branches: ["hello-world"]
+    paths:
+      - ".github/workflows/deploy.apps.yml"
+      - ".kubernetes/contoso-website/values.yaml"
 
 jobs:
-  Deploy:
+  deploy-staging:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
+      - name: Helm tool installer
+        uses: Azure/setup-helm@v1
+        with:
+          version: latest #v3.3.1
       - uses: azure/aks-set-context@v1
         with:
           creds: "${{ secrets.AZURE_CREDENTIALS }}"
           cluster-name: "aks-temp"
           resource-group: "aks-temp"
-      - name: deploy container to aks
-        uses: Azure/k8s-deploy@v1.3
+      - name: Run Helm Deploy
+        run: |
+          helm upgrade \
+            --install \
+            --create-namespace \
+            --atomic \
+            --wait \
+            --namespace staging \
+            contoso-website \
+            ./.kubernetes/contoso-website \
+            --set image.repository=${{ secrets.ACR_NAME }} \
+            --set dns.name=${{ secrets.DNS_NAME }}
+
+  run-tests:
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+
+    steps:
+      - name: Run Tests
+        run: echo 'run tests'
+
+  cleanup-staging:
+    runs-on: ubuntu-latest
+    needs: run-tests
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Helm tool installer
+        uses: Azure/setup-helm@v1
         with:
-          manifests: |
-            ./kubernetes/deploy.yml
-          images: ghcr.io/vergiet/backend:latest
-          kubectl-version: "latest"
+          version: latest #v3.3.1
+      - uses: azure/aks-set-context@v1
+        with:
+          creds: "${{ secrets.AZURE_CREDENTIALS }}"
+          cluster-name: "aks-temp"
+          resource-group: "aks-temp"
+      - name: Run Helm Delete
+        run: |
+          helm delete --namespace staging contoso-website
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: cleanup-staging
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Helm tool installer
+        uses: Azure/setup-helm@v1
+        with:
+          version: latest #v3.3.1
+      - uses: azure/aks-set-context@v1
+        with:
+          creds: "${{ secrets.AZURE_CREDENTIALS }}"
+          cluster-name: "aks-temp"
+          resource-group: "aks-temp"
+      - name: Run Helm Deploy
+        run: |
+          helm upgrade \
+            --install \
+            --create-namespace \
+            --atomic \
+            --wait \
+            --namespace production \
+            contoso-website \
+            ./.kubernetes/contoso-website \
+            --set image.repository=${{ secrets.ACR_NAME }} \
+            --set dns.name=${{ secrets.DNS_NAME }}
