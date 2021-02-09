@@ -33,6 +33,16 @@ spec:
           env:
             - name: DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2UNENCRYPTEDSUPPORT
               value: "true"
+            - name: connectionstring
+              valueFrom:
+                secretKeyRef:
+                  name: aks-eventhub-con-string-output
+                  key: connectionstring
+            - name: eventhub-name
+              valueFrom:
+                secretKeyRef:
+                  name: aks-eventhub-name-output
+                  key: name
 
 ---
 apiVersion: apps/v1

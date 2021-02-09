@@ -88,6 +88,21 @@ resource "kubernetes_secret" "aks-eventhub-con-string" {
 
 }
 
+resource "kubernetes_secret" "aks-eventhub-con-string-output" {
+  metadata {
+    name      = "aks-eventhub-con-string-output"
+    namespace = var.namespace
+  }
+
+  data = {
+    connectionstring = azurerm_eventhub_authorization_rule.example-output.primary_connection_string
+  }
+
+  type = "Opaque"
+
+
+}
+
 resource "kubernetes_secret" "aks-eventhub-name" {
   metadata {
     name      = "aks-eventhub-name"
@@ -96,6 +111,22 @@ resource "kubernetes_secret" "aks-eventhub-name" {
 
   data = {
     name = azurerm_eventhub.example.name
+  }
+
+  type = "Opaque"
+
+}
+
+
+
+resource "kubernetes_secret" "aks-eventhub-name-output" {
+  metadata {
+    name      = "aks-eventhub-name-output"
+    namespace = var.namespace
+  }
+
+  data = {
+    name = azurerm_eventhub.example-output.name
   }
 
   type = "Opaque"
@@ -175,4 +206,15 @@ resource "azurerm_stream_analytics_stream_input_eventhub" "example" {
     type     = "Json"
     encoding = "UTF8"
   }
+}
+
+
+resource "azurerm_eventhub_authorization_rule" "example-output" {
+  name                = "navi"
+  namespace_name      = azurerm_eventhub_namespace.example.name
+  eventhub_name       = azurerm_eventhub.example-output.name
+  resource_group_name = data.azurerm_resource_group.k8s.name
+  listen              = true
+  send                = false
+  manage              = false
 }
