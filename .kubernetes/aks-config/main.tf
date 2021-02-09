@@ -112,8 +112,8 @@ output "http_application_routing_zone_name" {
 
 resource "azurerm_stream_analytics_job" "example" {
   name                                     = "example-job"
-  resource_group_name                      = azurerm_resource_group.k8s.name
-  location                                 = azurerm_resource_group.k8s.location
+  resource_group_name                      = data.azurerm_resource_group.k8s.name
+  location                                 = data.azurerm_resource_group.k8s.location
   compatibility_level                      = "1.1"
   data_locale                              = "en-GB"
   events_late_arrival_max_delay_in_seconds = 60
@@ -146,6 +146,6 @@ resource "azurerm_stream_analytics_output_eventhub" "example" {
   shared_access_policy_name = "RootManageSharedAccessKey"
 
   serialization {
-    type = "json"
+    type = "Json"
   }
 }
