@@ -152,6 +152,13 @@ resource "azurerm_stream_analytics_output_eventhub" "example" {
   }
 }
 
+resource "azurerm_eventhub_consumer_group" "example" {
+  name                = "example-consumergroup"
+  namespace_name      = azurerm_eventhub_namespace.example.name
+  eventhub_name       = azurerm_eventhub.example.name
+  resource_group_name = data.azurerm_resource_group.k8s.name
+}
+
 
 resource "azurerm_stream_analytics_stream_input_eventhub" "example" {
   name                         = "eventhub-stream-input"
