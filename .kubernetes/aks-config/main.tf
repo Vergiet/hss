@@ -76,7 +76,7 @@ resource "azurerm_eventhub_authorization_rule" "example" {
 resource "kubernetes_secret" "aks-eventhub-con-string" {
   metadata {
     name      = "aks-eventhub-con-string"
-    namespace = var.namespace
+    namespace = kubernetes_namespace.example.name
   }
 
   data = {
@@ -91,7 +91,7 @@ resource "kubernetes_secret" "aks-eventhub-con-string" {
 resource "kubernetes_secret" "aks-eventhub-con-string-output" {
   metadata {
     name      = "aks-eventhub-con-string-output"
-    namespace = var.namespace
+    namespace = kubernetes_namespace.example.name
   }
 
   data = {
@@ -106,7 +106,7 @@ resource "kubernetes_secret" "aks-eventhub-con-string-output" {
 resource "kubernetes_secret" "aks-eventhub-name" {
   metadata {
     name      = "aks-eventhub-name"
-    namespace = var.namespace
+    namespace = kubernetes_namespace.example.name
   }
 
   data = {
@@ -122,7 +122,7 @@ resource "kubernetes_secret" "aks-eventhub-name" {
 resource "kubernetes_secret" "aks-eventhub-name-output" {
   metadata {
     name      = "aks-eventhub-name-output"
-    namespace = var.namespace
+    namespace = kubernetes_namespace.example.name
   }
 
   data = {
@@ -133,6 +133,20 @@ resource "kubernetes_secret" "aks-eventhub-name-output" {
 
 }
 
+
+resource "kubernetes_namespace" "example" {
+  metadata {
+    annotations = {
+      name = "example-annotation"
+    }
+
+    labels = {
+      mylabel = "label-value"
+    }
+
+    name = var.namespace
+  }
+}
 
 
 output "http_application_routing_zone_name" {
