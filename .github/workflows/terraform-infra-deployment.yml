@@ -124,7 +124,7 @@ jobs:
         uses: azure/powershell@v1
         with:
           inlineScript: |
-            if (Get-AzStreamAnalyticsJob -ResourceGroupName aks-temp | ?{$_.Name -eq "example-job"} | Tee-Object -Variable azStreamAnaJob}){
+            if (Get-AzStreamAnalyticsJob -ResourceGroupName aks-temp | ?{$_.Name -eq "example-job"} | Tee-Object -Variable azStreamAnaJob){
               $azStreamAnaJob | Stop-AzStreamAnalyticsJob
             }
           azPSVersion: "latest"
