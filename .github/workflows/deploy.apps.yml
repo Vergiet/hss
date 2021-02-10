@@ -3,7 +3,13 @@ name: deploy
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["build", "Infra Deployment"]
+    workflows:
+      [
+        "build ui",
+        "build forecastgenerator",
+        "build backend",
+        "Infra Deployment",
+      ]
     types:
       - completed
   push:
