@@ -123,8 +123,10 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az config set extension.use_dynamic_install=yes_without_prompt
-            az stream-analytics job stop --resource-group aks-temp --name example-job
+            if (Get-AzStreamAnalyticsJob -ResourceGroupName aks-temp | ?{$_.Name -eq "example-job"}){
+              az config set extension.use_dynamic_install=yes_without_prompt
+              az stream-analytics job stop --resource-group aks-temp --name example-job
+            }
 
   aks-config-apply:
     runs-on: ubuntu-latest
@@ -180,5 +182,7 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az config set extension.use_dynamic_install=yes_without_prompt
-            az stream-analytics job start --resource-group aks-temp --name example-job --output-start-mode LastOutputEventTime
+            if (Get-AzStreamAnalyticsJob -ResourceGroupName aks-temp | ?{$_.Name -eq "example-job"}){
+              az config set extension.use_dynamic_install=yes_without_prompt
+              az stream-analytics job start --resource-group aks-temp --name example-job --output-start-mode LastOutputEventTime
+            }
