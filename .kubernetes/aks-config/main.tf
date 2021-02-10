@@ -134,6 +134,78 @@ resource "kubernetes_secret" "aks-eventhub-name-output" {
 }
 
 
+
+
+
+
+
+resource "kubernetes_secret" "aks-eventhub-con-string-staging" {
+  metadata {
+    name      = "aks-eventhub-con-string"
+    namespace = kubernetes_namespace.example-staging.metadata[0].name
+  }
+
+  data = {
+    connectionstring = azurerm_eventhub_authorization_rule.example.primary_connection_string
+  }
+
+  type = "Opaque"
+
+
+}
+
+resource "kubernetes_secret" "aks-eventhub-con-string-output-staging" {
+  metadata {
+    name      = "aks-eventhub-con-string-output"
+    namespace = kubernetes_namespace.example-staging.metadata[0].name
+  }
+
+  data = {
+    connectionstring = azurerm_eventhub_authorization_rule.example-output.primary_connection_string
+  }
+
+  type = "Opaque"
+
+
+}
+
+resource "kubernetes_secret" "aks-eventhub-name-staging" {
+  metadata {
+    name      = "aks-eventhub-name"
+    namespace = kubernetes_namespace.example-staging.metadata[0].name
+  }
+
+  data = {
+    name = azurerm_eventhub.example.name
+  }
+
+  type = "Opaque"
+
+}
+
+
+
+resource "kubernetes_secret" "aks-eventhub-name-output-staging" {
+  metadata {
+    name      = "aks-eventhub-name-output"
+    namespace = kubernetes_namespace.example-staging.metadata[0].name
+  }
+
+  data = {
+    name = azurerm_eventhub.example-output.name
+  }
+
+  type = "Opaque"
+
+}
+
+
+
+
+
+
+
+
 resource "kubernetes_namespace" "example" {
   metadata {
     annotations = {
@@ -147,6 +219,22 @@ resource "kubernetes_namespace" "example" {
     name = var.namespace
   }
 }
+
+
+resource "kubernetes_namespace" "example-staging" {
+  metadata {
+    annotations = {
+      name = "example-annotation"
+    }
+
+    labels = {
+      mylabel = "label-value"
+    }
+
+    name = "staging"
+  }
+}
+
 
 
 output "http_application_routing_zone_name" {
