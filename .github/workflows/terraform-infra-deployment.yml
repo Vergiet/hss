@@ -185,6 +185,6 @@ jobs:
         with:
           inlineScript: |
             if (Get-AzStreamAnalyticsJob -ResourceGroupName aks-temp | ?{$_.Name -eq "example-job"} | Tee-Object -Variable azStreamAnaJob){
-              $azStreamAnaJob | Start-AzStreamAnalyticsJob
+              $azStreamAnaJob | Start-AzStreamAnalyticsJob -OutputStartMode LastOutputEventTime
             }
           azPSVersion: "latest"
