@@ -127,6 +127,7 @@ jobs:
             if (Get-AzStreamAnalyticsJob -ResourceGroupName aks-temp | ?{$_.Name -eq "example-job"} | Tee-Object -Variable azStreamAnaJob}){
               $azStreamAnaJob | Stop-AzStreamAnalyticsJob
             }
+          azPSVersion: "latest"
 
   aks-config-apply:
     runs-on: ubuntu-latest
