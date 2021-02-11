@@ -124,8 +124,8 @@ jobs:
         uses: azure/powershell@v1
         with:
           inlineScript: |
-            if (Get-AzStreamAnalyticsJob -ResourceGroupName aks-temp | ?{$_.Name -eq "example-job"} | Tee-Object -Variable azStreamAnaJob){
-              $azStreamAnaJob | Stop-AzStreamAnalyticsJob
+            if (Get-AzStreamAnalyticsJob -ResourceGroupName aks-temp | ?{$_.JobName -eq "example-job" -and $_.jobstate -ne 'Created' -and $_.jobstate -ne 'Stopped'} | Tee-Object -Variable azStreamAnaJob){
+              $azStreamAnaJob | %{ Stop-AzStreamAnalyticsJob -name $_.jobname -ResourceGroupName $_.ResourceGroupName }
             }
           azPSVersion: "latest"
 
@@ -184,7 +184,16 @@ jobs:
         uses: azure/powershell@v1
         with:
           inlineScript: |
-            if (Get-AzStreamAnalyticsJob -ResourceGroupName aks-temp | ?{$_.Name -eq "example-job"} | Tee-Object -Variable azStreamAnaJob){
-              $azStreamAnaJob | Start-AzStreamAnalyticsJob -OutputStartMode LastOutputEventTime
+            if (Get-AzStreamAnalyticsJob -ResourceGroupName aks-temp | ?{$_.JobName -eq "example-job"} | Tee-Object -Variable azStreamAnaJob){
+              $azStreamAnaJob | %{ 
+                $AzStreamAnalyticsJob = @{
+                  Name = $_.jobname
+                  ResourceGroupName = $_.ResourceGroupName
+                }
+                if ($_.JobStatus -ne 'Created'){
+                  $AzStreamAnalyticsJob.OutputStartMode = 'LastOutputEventTime'
+                }
+                Start-AzStreamAnalyticsJob @AzStreamAnalyticsJob
+              }
             }
           azPSVersion: "latest"
