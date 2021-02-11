@@ -277,7 +277,7 @@ resource "azurerm_eventhub_authorization_rule" "example-output" {
 
 
 resource "azurerm_storage_account" "example" {
-  name                     = "eventstreamlb-${random_id.storage_account_name_suffix.dec}"
+  name                     = "eventstreamlb${random_id.storage_account_name_suffix.dec}"
   resource_group_name      = data.azurerm_resource_group.k8s.name
   location                 = data.azurerm_resource_group.k8s.location
   account_tier             = "Standard"
