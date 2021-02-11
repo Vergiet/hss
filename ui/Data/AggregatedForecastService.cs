@@ -19,8 +19,8 @@ namespace Ui.Data
         static string connectionString = Environment.GetEnvironmentVariable("connectionstring");
         static string eventHubName = Environment.GetEnvironmentVariable("eventhub-name");
 
-        private string blobStorageConnectionString = Environment.GetEnvironmentVariable("blobStorageConnectionString");
-        private string blobContainerName = Environment.GetEnvironmentVariable("blobContainerName");
+        static string blobStorageConnectionString = Environment.GetEnvironmentVariable("blobStorageConnectionString");
+        static string blobContainerName = Environment.GetEnvironmentVariable("blobContainerName");
 
         public static async Task GetForecastAsync()
         {
