@@ -20,7 +20,9 @@
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "connectionstring": "Endpoint=sb://acceptancetesteventhubnamespace-14538.servicebus.windows.net/;SharedAccessKeyName=navi;SharedAccessKey=iepjDjIZnVmZLVaXrjmLDGIR9xmIBxY3Xen/2FnEXyg=;EntityPath=acceptancetesteventhub-14538-output",
+                "eventhub-name": "acceptancetesteventhub-14538-output"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"

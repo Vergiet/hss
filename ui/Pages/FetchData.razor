@@ -5,35 +5,34 @@
 @using System.Threading
 @using Azure.Messaging.EventHubs.Consumer
 @using System.Text.Json
-@inject WeatherForecastService ForecastService
+
 
 <h1>Weather forecast</h1>
 
 <p>This component demonstrates fetching data from a service.</p>
-
-@if (forecasts == null)
+@if (stringb == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
     <table class="table">
-        <thead>
-            <tr>
-                <th>Day</th>
-                <th>AVG</th>
-                <th>MIN</th>
-                <th>MAX</th>
-                <th>STDEVP</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
+    <thead>
+        <tr>
+            <th>Day</th>
+            <th>AVG</th>
+            <th>MIN</th>
+            <th>MAX</th>
+            <th>STDEVP</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var forecast in stringb)
             {
                 <tr>
                     <td>@forecast.Day</td>
-                            <td>@forecast.AVG</td>
-                            <td>@forecast.MIN</td>
+                    <td>@forecast.AVG</td>
+                    <td>@forecast.MIN</td>
                     <td>@forecast.MAX</td>
                     <td>@forecast.STDEVP</td>
                 </tr>
@@ -41,66 +40,94 @@ else
         </tbody>
     </table>
 }
+@if (stringc == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <p>@stringc</p>
+}
+
+
+
+
+@functions {
+    private List<AggregatedForecast> stringb;
+    private string stringc;
+
+    protected override async Task OnInitializedAsync()
+    //async Task BuildUrl()
+    {
+        AggregatedForecastService.GetForecastAsync();
+        await Task.Delay(1000);
+        //stringb = AggregatedForecastService.stringa;
+        if (AggregatedForecastService.stringa != null){
+            stringb = JsonSerializer.Deserialize<List<AggregatedForecast>>(AggregatedForecastService.stringa);
+        }
+        
+        
+        stringc = await Task.FromResult("Hello");
+
+    }
+}
 
 @code {
     //private AggregatedForecast[] forecasts;
-    private List<AggregatedForecast> forecasts;
-    protected new async void OnInitializedAsync()
-    {
+    // private List<AggregatedForecast> forecasts;
 
-        string connectionString = Environment.GetEnvironmentVariable("connectionstring");
-        string eventHubName = Environment.GetEnvironmentVariable("eventhub-name");
-        string consumerGroup = EventHubConsumerClient.DefaultConsumerGroupName;
+    /*
 
-        await using (var consumer = new EventHubConsumerClient(consumerGroup, connectionString, eventHubName))
+
+        <button class="btn btn-primary" @onclick="@BuildUrl">Get events</button>
+
+    protected override async void OnInitializedAsync()
         {
-            using var cancellationSource = new CancellationTokenSource();
-            cancellationSource.CancelAfter(TimeSpan.FromSeconds(450000));
-
-            await foreach (PartitionEvent receivedEvent in consumer.ReadEventsAsync(cancellationSource.Token))
-            {
-                // At this point, the loop will wait for events to be available in the Event Hub. When an event
-                // is available, the loop will iterate with the event that was received. Because we did not
-                // specify a maximum wait time, the loop will wait forever unless cancellation is requested using
-                // the cancellation token.
-
-                //var data = BinaryData.FromBytes();
-
-                var body = receivedEvent.Data.Body.ToArray();
-                var data = Encoding.UTF8.GetString(body);
-
-                //
-                var message = string.Format("Read at:{0} Message: {1}", DateTime.Now, data.ToString());
-                Console.WriteLine(message);
-                try
-                {
-                    var forecast = JsonSerializer.Deserialize<AggregatedForecast>(data);
-                    forecasts.Add(forecast);
-                    /*
-                    foreach (var forcast in forcasts)
-                    {
-                    var message2 = string.Format("Read at:{0} Day: {1}, AVG: {2}, MIN: {3}, MAX: {4}, STDEVP: {5}", DateTime.Now,
-                    forcast.Day,
-                    forcast.AVG, forcast.MIN, forcast.MAX, forcast.STDEVP);
-                    Console.WriteLine(message2);
-                }
-                    */
-
-                }
-                catch
-                {
-                    Console.WriteLine("cashed");
-                }
-
-
-                //
-
-            }
+        return await AggregatedForecastService.GetForecastAsync();
         }
+        */
 
-        //resetEvent.Set(); // Allow the program to exit
+    /*
+    @inject AggregatedForecastService ForecastService
+    @if (forecasts == null)
+        {
+        <p><em>Loading...</em></p>
+        }
+        else
+        {
+        <table class="table">
+        <thead>
+        <tr>
+        <th>Day</th>
+        <th>AVG</th>
+        <th>MIN</th>
+        <th>MAX</th>
+        <th>STDEVP</th>
+        </tr>
+        </thead>
+        <tbody>
+    @foreach (var forecast in forecasts)
+        {
+        <tr>
+        <td>@forecast.Day</td>
+        <td>@forecast.AVG</td>
+        <td>@forecast.MIN</td>
+        <td>@forecast.MAX</td>
+        <td>@forecast.STDEVP</td>
+        </tr>
+        }
+        </tbody>
+        </table>
+        }
+    protected override async void OnInitializedAsync()
+        {
 
-    }
+
+    forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+    //resetEvent.Set(); // Allow the program to exit
+
+        }
+        */
     //private WeatherForecast[] forecasts;
 
     /*

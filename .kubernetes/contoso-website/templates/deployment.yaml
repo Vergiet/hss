@@ -36,13 +36,23 @@ spec:
             - name: connectionstring
               valueFrom:
                 secretKeyRef:
-                  name: aks-eventhub-con-string-output
-                  key: connectionstring
+                  name: aks-eventhub-output
+                  key: eventhubconnectionstring
             - name: eventhub-name
               valueFrom:
                 secretKeyRef:
-                  name: aks-eventhub-name-output
-                  key: name
+                  name: aks-eventhub-output
+                  key: eventhubname
+            - name: blobStorageConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: aks-eventhub-output
+                  key: storageconnectionstring
+            - name: blobContainerName
+              valueFrom:
+                secretKeyRef:
+                  name: aks-eventhub-output
+                  key: storangecontainername
 
 ---
 apiVersion: apps/v1
@@ -97,13 +107,13 @@ spec:
                 - name: connectionstring
                   valueFrom:
                     secretKeyRef:
-                      name: aks-eventhub-con-string
-                      key: connectionstring
+                      name: aks-eventhub-input
+                      key: eventhubconnectionstring
                 - name: eventhub-name
                   valueFrom:
                     secretKeyRef:
-                      name: aks-eventhub-name
-                      key: name
+                      name: aks-eventhub-input
+                      key: eventhubname
               resources:
                 requests:
                   cpu: 100m

@@ -33,6 +33,10 @@ resource "random_id" "event_hub_name_suffix" {
   byte_length = 2
 }
 
+resource "random_id" "storage_account_name_suffix" {
+  byte_length = 2
+}
+
 
 resource "azurerm_eventhub_namespace" "example" {
   name                = "acceptanceTestEventHubNamespace-${random_id.event_hub_name_suffix.dec}"
@@ -47,7 +51,7 @@ resource "azurerm_eventhub_namespace" "example" {
 }
 
 resource "azurerm_eventhub" "example" {
-  name                = "acceptanceTestEventHub-${random_id.event_hub_name_suffix.dec}"
+  name                = "inputhub-${random_id.event_hub_name_suffix.dec}"
   namespace_name      = azurerm_eventhub_namespace.example.name
   resource_group_name = data.azurerm_resource_group.k8s.name
   partition_count     = 2
@@ -55,7 +59,7 @@ resource "azurerm_eventhub" "example" {
 }
 
 resource "azurerm_eventhub" "example-output" {
-  name                = "acceptanceTestEventHub-${random_id.event_hub_name_suffix.dec}-output"
+  name                = "outputhub-${random_id.event_hub_name_suffix.dec}"
   namespace_name      = azurerm_eventhub_namespace.example.name
   resource_group_name = data.azurerm_resource_group.k8s.name
   partition_count     = 2
@@ -73,14 +77,16 @@ resource "azurerm_eventhub_authorization_rule" "example" {
 }
 
 
-resource "kubernetes_secret" "aks-eventhub-con-string" {
+resource "kubernetes_secret" "aks-eventhub-input-prod" {
   metadata {
-    name      = "aks-eventhub-con-string"
+    name      = "aks-eventhub-input"
     namespace = kubernetes_namespace.example.metadata[0].name
   }
 
   data = {
-    connectionstring = azurerm_eventhub_authorization_rule.example.primary_connection_string
+    eventhubconnectionstring = azurerm_eventhub_authorization_rule.example.primary_connection_string
+    eventhubname             = azurerm_eventhub.example.name
+
   }
 
   type = "Opaque"
@@ -88,14 +94,17 @@ resource "kubernetes_secret" "aks-eventhub-con-string" {
 
 }
 
-resource "kubernetes_secret" "aks-eventhub-con-string-output" {
+resource "kubernetes_secret" "aks-eventhub-output-prod" {
   metadata {
-    name      = "aks-eventhub-con-string-output"
+    name      = "aks-eventhub-output"
     namespace = kubernetes_namespace.example.metadata[0].name
   }
 
   data = {
-    connectionstring = azurerm_eventhub_authorization_rule.example-output.primary_connection_string
+    eventhubconnectionstring = azurerm_eventhub_authorization_rule.example-output.primary_connection_string
+    eventhubname             = azurerm_eventhub.example-output.name
+    storageconnectionstring  = azurerm_storage_account.example.primary_connection_string
+    storangecontainername    = azurerm_storage_container.example-output.name
   }
 
   type = "Opaque"
@@ -103,50 +112,18 @@ resource "kubernetes_secret" "aks-eventhub-con-string-output" {
 
 }
 
-resource "kubernetes_secret" "aks-eventhub-name" {
+
+
+
+resource "kubernetes_secret" "aks-eventhub-input-stag" {
   metadata {
-    name      = "aks-eventhub-name"
-    namespace = kubernetes_namespace.example.metadata[0].name
-  }
-
-  data = {
-    name = azurerm_eventhub.example.name
-  }
-
-  type = "Opaque"
-
-}
-
-
-
-resource "kubernetes_secret" "aks-eventhub-name-output" {
-  metadata {
-    name      = "aks-eventhub-name-output"
-    namespace = kubernetes_namespace.example.metadata[0].name
-  }
-
-  data = {
-    name = azurerm_eventhub.example-output.name
-  }
-
-  type = "Opaque"
-
-}
-
-
-
-
-
-
-
-resource "kubernetes_secret" "aks-eventhub-con-string-staging" {
-  metadata {
-    name      = "aks-eventhub-con-string"
+    name      = "aks-eventhub-input"
     namespace = kubernetes_namespace.example-staging.metadata[0].name
   }
 
   data = {
-    connectionstring = azurerm_eventhub_authorization_rule.example.primary_connection_string
+    eventhubconnectionstring = azurerm_eventhub_authorization_rule.example.primary_connection_string
+    eventhubname             = azurerm_eventhub.example.name
   }
 
   type = "Opaque"
@@ -154,14 +131,17 @@ resource "kubernetes_secret" "aks-eventhub-con-string-staging" {
 
 }
 
-resource "kubernetes_secret" "aks-eventhub-con-string-output-staging" {
+resource "kubernetes_secret" "aks-eventhub-output-stag" {
   metadata {
-    name      = "aks-eventhub-con-string-output"
+    name      = "aks-eventhub-output"
     namespace = kubernetes_namespace.example-staging.metadata[0].name
   }
 
   data = {
-    connectionstring = azurerm_eventhub_authorization_rule.example-output.primary_connection_string
+    eventhubconnectionstring = azurerm_eventhub_authorization_rule.example-output.primary_connection_string
+    eventhubname             = azurerm_eventhub.example-output.name
+    storageconnectionstring  = azurerm_storage_account.example.primary_connection_string
+    storangecontainername    = azurerm_storage_container.example-output.name
   }
 
   type = "Opaque"
@@ -169,35 +149,9 @@ resource "kubernetes_secret" "aks-eventhub-con-string-output-staging" {
 
 }
 
-resource "kubernetes_secret" "aks-eventhub-name-staging" {
-  metadata {
-    name      = "aks-eventhub-name"
-    namespace = kubernetes_namespace.example-staging.metadata[0].name
-  }
-
-  data = {
-    name = azurerm_eventhub.example.name
-  }
-
-  type = "Opaque"
-
-}
 
 
 
-resource "kubernetes_secret" "aks-eventhub-name-output-staging" {
-  metadata {
-    name      = "aks-eventhub-name-output"
-    namespace = kubernetes_namespace.example-staging.metadata[0].name
-  }
-
-  data = {
-    name = azurerm_eventhub.example-output.name
-  }
-
-  type = "Opaque"
-
-}
 
 
 
@@ -263,7 +217,7 @@ resource "azurerm_stream_analytics_job" "example" {
     SELECT Day, AVG(TemperatureC),MIN(TemperatureC),MAX(TemperatureC),STDEVP(TemperatureC)
     INTO [output-to-eventhub]
     FROM [eventhub-stream-input]
-    GROUP BY Day, TumblingWindow(minute,5)  
+    GROUP BY Day, TumblingWindow(second,5)  
 QUERY
 
 }
@@ -319,4 +273,23 @@ resource "azurerm_eventhub_authorization_rule" "example-output" {
   listen              = true
   send                = false
   manage              = false
+}
+
+
+resource "azurerm_storage_account" "example" {
+  name                     = "eventstreamlb-${random_id.storage_account_name_suffix.dec}"
+  resource_group_name      = data.azurerm_resource_group.k8s.name
+  location                 = data.azurerm_resource_group.k8s.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+
+  tags = {
+    environment = "Development"
+  }
+}
+
+resource "azurerm_storage_container" "example-output" {
+  name                  = "lb-${azurerm_eventhub.example-output.name}"
+  storage_account_name  = azurerm_storage_account.example.name
+  container_access_type = "private"
 }

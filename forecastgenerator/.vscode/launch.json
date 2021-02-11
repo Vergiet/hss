@@ -15,7 +15,12 @@
             "cwd": "${workspaceFolder}",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
-            "stopAtEntry": false
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "connectionstring": "Endpoint=sb://acceptancetesteventhubnamespace-14538.servicebus.windows.net/;SharedAccessKeyName=navi;SharedAccessKey=SiKwk1fNcQrQjmn6FxTT128w4rxMBZAaFdKnzr/d0qw=;EntityPath=acceptancetesteventhub-14538",
+                "eventhub-name": "acceptancetesteventhub-14538"
+            },
         },
         {
             "name": ".NET Core Attach",

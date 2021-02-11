@@ -41,30 +41,32 @@ namespace ForecastGenerator
                 await using (var producer = new EventHubProducerClient(connectionString, eventHubName))
                 {
 
-                    var ForecastService = new WeatherForecastService();
-                    var forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+                    for (int i = 0; i < 60; i++){
+                        var ForecastService = new WeatherForecastService();
+                        var forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
 
 
-                    using EventDataBatch eventBatch = await producer.CreateBatchAsync();
+                        using EventDataBatch eventBatch = await producer.CreateBatchAsync();
 
-                    foreach (var forecast in forecasts)
-                    {
-                        /*
-                        Message msg = new Message
+                        foreach (var forecast in forecasts)
                         {
-                            date = DateTime.Now,
-                            text = Guid.NewGuid().ToString(),
+                            /*
+                            Message msg = new Message
+                            {
+                                date = DateTime.Now,
+                                text = Guid.NewGuid().ToString(),
+                            };
+                            */
+                            var message = JsonSerializer.Serialize(forecast);
+                            // var message = string.Format("{0} > Sending message: {1}", DateTime.Now, Guid.NewGuid().ToString());
+                            eventBatch.TryAdd(new EventData(Encoding.ASCII.GetBytes(message)));
+                            _logger.LogInformation(message);
                         };
-                        */
-                        var message = JsonSerializer.Serialize(forecast);
-                        // var message = string.Format("{0} > Sending message: {1}", DateTime.Now, Guid.NewGuid().ToString());
-                        eventBatch.TryAdd(new EventData(Encoding.ASCII.GetBytes(message)));
-                        _logger.LogInformation(message);
+                                            
+                        await producer.SendAsync(eventBatch);
+                        //Thread.Sleep(200);
+                        await Task.Delay(1000, stoppingToken);
                     };
-
-                    await producer.SendAsync(eventBatch);
-                    //Thread.Sleep(200);
-                    await Task.Delay(200, stoppingToken);
 
                 };
             }
