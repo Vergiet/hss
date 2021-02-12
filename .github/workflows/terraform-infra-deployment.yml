@@ -14,9 +14,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ARM_CLIENT_ID: 03a04d55-d299-4aad-97f6-176d371d9c1a
-      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
-      ARM_SUBSCRIPTION_ID: 233516f9-0a43-4284-8ffc-a401b6223e82
+      ARM_CLIENT_ID: 4d133757-c6ec-4421-a92a-c9051aeaf2ec
+      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET_2}}
+      ARM_SUBSCRIPTION_ID: f3f5415e-60df-46be-bedb-c5465568b158
       ARM_TENANT_ID: 6800fb13-bbf4-4885-a72e-a936ce5796da
       tf_working_dir: ./.kubernetes/infra
 
@@ -43,9 +43,9 @@ jobs:
     needs: infra-plan
 
     env:
-      ARM_CLIENT_ID: 03a04d55-d299-4aad-97f6-176d371d9c1a
-      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
-      ARM_SUBSCRIPTION_ID: 233516f9-0a43-4284-8ffc-a401b6223e82
+      ARM_CLIENT_ID: 4d133757-c6ec-4421-a92a-c9051aeaf2ec
+      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET_2}}
+      ARM_SUBSCRIPTION_ID: f3f5415e-60df-46be-bedb-c5465568b158
       ARM_TENANT_ID: 6800fb13-bbf4-4885-a72e-a936ce5796da
       tf_working_dir: ./.kubernetes/infra
 
@@ -69,9 +69,9 @@ jobs:
     needs: infra-apply
 
     env:
-      ARM_CLIENT_ID: 03a04d55-d299-4aad-97f6-176d371d9c1a
-      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
-      ARM_SUBSCRIPTION_ID: 233516f9-0a43-4284-8ffc-a401b6223e82
+      ARM_CLIENT_ID: 4d133757-c6ec-4421-a92a-c9051aeaf2ec
+      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET_2}}
+      ARM_SUBSCRIPTION_ID: f3f5415e-60df-46be-bedb-c5465568b158
       ARM_TENANT_ID: 6800fb13-bbf4-4885-a72e-a936ce5796da
       tf_working_dir: ./.kubernetes/aks-config
 
@@ -84,7 +84,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_CREDENTIALS_2 }}
 
       - name: Azure CLI script
         uses: azure/CLI@v1
@@ -117,7 +117,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_CREDENTIALS_2 }}
           enable-AzPSSession: true
 
       - name: Run Azure PowerShell script
@@ -134,9 +134,9 @@ jobs:
     needs: stop-running-jobs
 
     env:
-      ARM_CLIENT_ID: 03a04d55-d299-4aad-97f6-176d371d9c1a
-      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
-      ARM_SUBSCRIPTION_ID: 233516f9-0a43-4284-8ffc-a401b6223e82
+      ARM_CLIENT_ID: 4d133757-c6ec-4421-a92a-c9051aeaf2ec
+      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET_2}}
+      ARM_SUBSCRIPTION_ID: f3f5415e-60df-46be-bedb-c5465568b158
       ARM_TENANT_ID: 6800fb13-bbf4-4885-a72e-a936ce5796da
       tf_working_dir: ./.kubernetes/aks-config
 
@@ -149,7 +149,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_CREDENTIALS_2 }}
 
       - name: Azure CLI script
         uses: azure/CLI@v1
@@ -177,7 +177,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_CREDENTIALS_2 }}
           enable-AzPSSession: true
 
       - name: Run Azure PowerShell script

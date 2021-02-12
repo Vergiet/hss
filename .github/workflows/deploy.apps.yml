@@ -31,7 +31,7 @@ jobs:
           version: latest #v3.3.1
       - uses: azure/aks-set-context@v1
         with:
-          creds: "${{ secrets.AZURE_CREDENTIALS }}"
+          creds: "${{ secrets.AZURE_CREDENTIALS_2 }}"
           cluster-name: "aks-temp"
           resource-group: "aks-temp"
       - name: Run Helm Deploy
@@ -67,7 +67,7 @@ jobs:
           version: latest #v3.3.1
       - uses: azure/aks-set-context@v1
         with:
-          creds: "${{ secrets.AZURE_CREDENTIALS }}"
+          creds: "${{ secrets.AZURE_CREDENTIALS_2 }}"
           cluster-name: "aks-temp"
           resource-group: "aks-temp"
       - name: Run Helm Delete
@@ -87,7 +87,7 @@ jobs:
           version: latest #v3.3.1
       - uses: azure/aks-set-context@v1
         with:
-          creds: "${{ secrets.AZURE_CREDENTIALS }}"
+          creds: "${{ secrets.AZURE_CREDENTIALS_2 }}"
           cluster-name: "aks-temp"
           resource-group: "aks-temp"
       - name: Run Helm Deploy
