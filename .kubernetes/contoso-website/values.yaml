@@ -2,7 +2,7 @@ image:
   registry: ghcr.io/vergiet
   ui:
     name: ui
-    tag: 0.1.6
+    tag: 0.1.7
   backend:
     name: backend
     tag: 0.1.4
