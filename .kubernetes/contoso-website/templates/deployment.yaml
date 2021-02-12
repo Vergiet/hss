@@ -7,7 +7,7 @@ spec:
   selector:
     matchLabels:
       app: ui
-  replicas: 4
+  replicas: 1
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -64,7 +64,7 @@ spec:
   selector:
     matchLabels:
       app: backend
-  replicas: 4
+  replicas: 1
   strategy:
     rollingUpdate:
       maxSurge: 1
