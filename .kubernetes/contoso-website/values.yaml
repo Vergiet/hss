@@ -2,10 +2,10 @@ image:
   registry: ghcr.io/vergiet
   ui:
     name: ui
-    tag: latest
+    tag: 0.1.6
   backend:
     name: backend
-    tag: latest
+    tag: 0.1.4
   forecastgenerator:
     name: forecastgenerator
-    tag: latest
+    tag: 0.1.5
