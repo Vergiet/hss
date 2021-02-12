@@ -12,8 +12,8 @@ provider "azurerm" {
 
 terraform {
   backend "azurerm" {
-    resource_group_name  = "github-actions-infra-state"
-    storage_account_name = "ghainfratfstate"
+    resource_group_name  = "github-actions-infra-state-2"
+    storage_account_name = "ghainfratfstate-2"
     container_name       = "terraform-state"
     key                  = "aks-config.tfstate"
   }
