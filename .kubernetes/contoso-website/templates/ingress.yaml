@@ -5,6 +5,7 @@ metadata:
   namespace: {{ default "staging" .Release.Namespace }}
   annotations:
     kubernetes.io/ingress.class: addon-http-application-routing
+    nginx.ingress.kubernetes.io/affinity: cookie
 spec:
   rules:
     - host: ui-{{ default "staging" .Release.Namespace }}.{{ .Values.dns.name }}
