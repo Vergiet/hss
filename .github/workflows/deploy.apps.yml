@@ -16,7 +16,7 @@ on:
     branches: ["hello-world"]
     paths:
       - ".github/workflows/deploy.apps.yml"
-      - ".kubernetes/contoso-website/values.yaml"
+      - ".kubernetes/contoso-website/**"
 
 jobs:
   deploy-staging:
