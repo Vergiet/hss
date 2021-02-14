@@ -190,7 +190,7 @@ jobs:
                   Name = $_.jobname
                   ResourceGroupName = $_.ResourceGroupName
                 }
-                if ($_.JobStatus -ne 'Created'){
+                if ($_.JobState -ne 'Created'){
                   $AzStreamAnalyticsJob.OutputStartMode = 'LastOutputEventTime'
                 }
                 Start-AzStreamAnalyticsJob @AzStreamAnalyticsJob
